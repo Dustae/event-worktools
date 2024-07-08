@@ -1,0 +1,146 @@
+.body11 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('https://i.pinimg.com/564x/e6/e7/cf/e6e7cfc4c79c7a97aa2faab7a9a93c18.jpg') no-repeat center center fixed;
+  background-size: cover;
+  background-color: white;
+}
+
+/* Wrapper styling */
+.wrapper11 {
+  width: 420px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(30px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  border-radius: 40px;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+}
+
+/* Heading styling */
+.wrapper11 h1 {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 20px; /* Add space below heading */
+}
+
+/* Input box styling */
+.input-box11 {
+  position: relative;
+  width: 100%;
+  margin: 10px 0; /* Reduced margin */
+}
+
+.icon11 {
+  font-size: 50px; /* Adjusted font size */
+  margin-bottom: 20px; /* Added margin for spacing */
+}
+
+.input-box11 input {
+  width: 100%;
+  padding: 15px 20px; /* Adjusted padding */
+  background: rgba(255, 255, 255, 0.8); /* Light background for inputs */
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 14px; /* Reduced font size */
+  color: #333;
+}
+
+.input-box11 input::placeholder {
+  color: #999;
+}
+
+/* Button styling */
+.wrapper11 button {
+  width: 100%;
+  height: 45px;
+  background: #333;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 700;
+  margin-top: 20px;
+  transition: background 0.3s;
+}
+
+.wrapper11 button:hover {
+  background: #555; /* Darker background on hover */
+}
+
+/* Register link styling */
+.register-link11 {
+  font-size: 14px; /* Adjusted font size */
+  text-align: center;
+  margin-top: 15px;
+}
+
+.register-link11 p a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link11 p a:hover {
+  text-decoration: underline;
+}
+
+/* Back link styling */
+.back-link2 {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 24px; /* Adjusted font size */
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .wrapper11 {
+    width: 80%; /* Adjusted width */
+    padding: 20px; /* Adjusted padding */
+  }
+
+  .wrapper11 h1 {
+    font-size: 30px; /* Adjusted font size */
+  }
+
+  .input-box11 input {
+    padding: 12px 15px; /* Adjusted padding */
+  }
+
+  .wrapper11 button {
+    height: 40px; /* Adjusted height */
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper11 {
+    width: 90%; /* Adjusted width */
+    padding: 15px; /* Adjusted padding */
+  }
+
+  .wrapper11 h1 {
+    font-size: 24px; /* Adjusted font size */
+  }
+
+  .input-box11 input {
+    padding: 10px 12px; /* Adjusted padding */
+  }
+
+  .wrapper11 button {
+    height: 35px; /* Adjusted height */
+  }
+}
