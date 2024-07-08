@@ -22,21 +22,21 @@ const ConfirmBooth = () => {
   }
 
   return (
-    <div className="body1_1">
-      <div className="checkin-container">
-        <div className="checkin-wrapper">
-          <FaCheck className="checkin-icon" />
+    <div className="body33">
+      <div className="checkin-container33">
+        <div className="checkin-wrapper33">
+          <FaCheck className="checkin-icon33" />
           <h1>Confirm Details</h1>
           <p>Please confirm your details:</p>
-          <div className="result-item">
+          <div className="result-item33">
             <p>{result.name}</p>
             <p>{result.phone}</p>
             <p>{result.email}</p>
           </div>
-          <button className="checkin-button" onClick={handleCheckIn}>
+          <button className="checkin-button33" onClick={handleCheckIn}>
             Check-In
           </button>
-          <button className="checkin-button" onClick={handleBack}>
+          <button className="checkin-button34" onClick={handleBack}>
             Back
           </button>
         </div>

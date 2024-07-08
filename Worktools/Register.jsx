@@ -6,31 +6,31 @@ import './Register.css';
 
 const Register = () => {
   return (
-    <div className="body">
+    <div className="body89">
           <Link to="/" className="back-link2">
         <IoMdArrowBack className="back-icon2" />
            </Link>
-      <div className="wrapper">
+      <div className="wrapper89">
         <FaUserCircle className='icon1' />
         <form action="">
           <h1>Register</h1>
-          <div className="input-box">
+          <div className="input-box89">
             <input type="text" placeholder="Username" required />
           </div>
-          <div className="input-box">
+          <div className="input-box89">
             <input type="password" placeholder="Password" required />
           </div>
-          <div className="input-box">
+          <div className="input-box89">
             <input type="text" placeholder="Name" required />
           </div>
-          <div className="input-box">
+          <div className="input-box89">
             <input type="text" placeholder="Address" required />
           </div>
-          <div className="input-box">
+          <div className="input-box89">
             <input type="tel" placeholder="PhoneNumber" required />
           </div>
           <button type="submit">Register</button>
-          <div className="register-link">
+          <div className="register-link89">
             <p>Already have an account? <Link to="/checkin">Login</Link></p>
           </div>
         </form>

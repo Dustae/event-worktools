@@ -8,9 +8,9 @@ const SuccessBooth = () => {
     <div className="success-body">
       <div className="success-container">
         <FaCheck className="success-icon" />
-        <h1>Check-Success</h1>
-        <p>Congratulation</p>
-        <Link to="/registerbooth" className="back-button">
+        <h1 className='text44'>Check-In Success</h1>
+        <p className='text45'>Congratulations! Your check-in was successful.</p>
+        <Link to="/" className="back-button">
           Back
         </Link>
       </div>

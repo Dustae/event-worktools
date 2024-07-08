@@ -8,7 +8,7 @@
   background-color: white;
 }
 
-.checkin-container {
+.checkin-container22 {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,7 +16,7 @@
   height: 100%;
 }
 
-.checkin-wrapper {
+.checkin-wrapper22 {
   background-color: #f8f9fa; /* Changed background color */
   padding: 20px 40px;
   border-radius: 10px;
@@ -27,31 +27,31 @@
   color: #fff;
 }
 
-.checkin-icon {
+.checkin-icon22 {
   font-size: 50px;
   color: #4caf50;
   margin-bottom: 20px;
 }
 
-h1 {
+.text23 {
   margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 40px;
   color: #ffffff;
 }
 
-p {
+.text22 {
   margin-bottom: 20px;
   font-size: 16px;
   color: #ffffff;
 }
 
-.input-group {
+.input-group22 {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.input-group input {
+.input-group22 input {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -61,12 +61,12 @@ p {
   transition: border-color 0.3s; /* Smooth transition for border color */
 }
 
-.input-group input:focus {
+.input-group22 input:focus {
   border-color: #4caf50; /* Change border color on focus */
   outline: none; /* Remove default outline */
 }
 
-.search-button {
+.search-button22 {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -78,38 +78,38 @@ p {
   transition: background-color 0.3s; /* Smooth transition for background color */
 }
 
-.search-button:hover {
-  background-color: #45a049;
+.search-button22:hover {
+  background-color: #2fcc2a;
 }
 
-.search-results {
+.search-results22 {
   margin-top: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 20px;
   background-color: #333; /* Corrected background color */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 10px;
 }
 
-.result-item {
+.result-item22 {
   padding: 10px;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
 }
 
-.result-item:last-child {
+.result-item22:last-child {
   border-bottom: none;
 }
 
-.result-item p {
+.result-item22 p {
   margin: 5px 0;
 }
 
 .selected {
-  background-color: #e0f7fa;
+  background-color: #21620f;
 }
 
-.checkin-button {
+.checkin-button22 {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -117,12 +117,18 @@ p {
   color: white;
   cursor: pointer;
   margin-top: 10px;
+  width: 60%; 
 }
 
-.checkin-button:disabled {
-  background-color: #ccc;
+.checkin-button22:disabled {
+  background-color: #000000;
   cursor: not-allowed;
 }
+
+.checkin-button22:hover {
+  background: #4caf50; 
+}
+
 
 .register-link22 p {
   font-size: 14px;
@@ -130,10 +136,11 @@ p {
 }
 
 .register-link22 p a {
-  color: #4caf50;
+  color: #333;
   text-decoration: none;
 }
 
 .register-link22 p a:hover {
   text-decoration: underline;
+  color: rgb(72, 14, 220);
 }

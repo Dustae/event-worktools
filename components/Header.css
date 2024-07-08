@@ -1,4 +1,8 @@
-body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+body, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Raleway', sans-serif;
+}
 
 body, html {
   height: 100%;
@@ -10,6 +14,7 @@ body, html {
   background-size: cover;
   background-image: url("https://cdn.prod.website-files.com/5a9ee6416e90d20001b20038/64dc6fbee79a172c3685dfc4_011.jpg");
   min-height: 800px;
+  position: relative;
 }
 
 .w3-bar .w3-button {
@@ -19,7 +24,9 @@ body, html {
 .header-content {
   padding: 48px;
   animation: fadeIn 2s ease-in-out;
+  max-width: 800px;
 }
+
 
 .animated-text {
   display: inline-block;
@@ -57,5 +64,62 @@ body, html {
   }
   to {
     opacity: 1;
+  }
+}
+
+.scroll-down {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: white;
+  animation: fadeIn 3s ease-in-out;
+}
+
+.scroll-down span {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 10px;
+  animation: scrollText 2s infinite;
+}
+
+@keyframes scrollText {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.mouse-icon {
+  width: 24px;
+  height: 40px;
+  border: 2px solid white;
+  border-radius: 20px;
+  position: relative;
+}
+
+.mouse-icon .wheel {
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: wheel 2s infinite;
+}
+
+@keyframes wheel {
+  0%, 100% {
+    top: 6px;
+    opacity: 1;
+  }
+  50% {
+    top: 20px;
+    opacity: 0;
   }
 }

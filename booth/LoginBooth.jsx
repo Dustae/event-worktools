@@ -38,12 +38,14 @@ const LoginBooth = () => {
 
   return (
     <div className="body22"> 
-      <div className="checkin-container">
-        <div className="checkin-wrapper">
-          <FaCheck className="checkin-icon" />
-          <h1>Check-In</h1>
-          <p>Enter your details to check-in</p>
-          <form onSubmit={handleSearch} className="input-group">
+      <div className="checkin-container22">
+        <div className="checkin-wrapper22">
+          <FaCheck className="checkin-icon22" />
+         
+          <h1 className='text23'>Check-In</h1>
+          <p className='text22'>Enter your details to check-in</p>
+          
+          <form onSubmit={handleSearch} className="input-group22">
             <input
               type="text"
               placeholder="Search by name, phone or email"
@@ -51,14 +53,14 @@ const LoginBooth = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               required
             />
-            <button type="submit" className="search-button">Search</button>
+            <button type="submit" className="search-button22">Search</button>
           </form>
-          <div className="search-results">
+          <div className="search-results22">
             {results.length > 0 ? (
               results.map((result, index) => (
                 <div
                   key={index}
-                  className={`result-item ${selectedResult === result ? 'selected' : ''}`}
+                  className={`result-item22 ${selectedResult === result ? 'selected' : ''}`}
                   onClick={() => handleSelect(result)}
                 >
                   <span>{result.name}</span>
@@ -67,10 +69,10 @@ const LoginBooth = () => {
                 </div>
               ))
             ) : (
-              <p>No results found</p>
+              <p className='text22'>No results found</p>
             )}
           </div>
-          <button className="checkin-button" onClick={handleNext} disabled={!selectedResult}>
+          <button className="checkin-button22" onClick={handleNext} disabled={!selectedResult}>
             Next
           </button>
           <div className="register-link22">
