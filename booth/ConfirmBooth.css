@@ -2,9 +2,7 @@
     height: 100%;
     margin: 0;
     font-family: "Raleway", sans-serif;
-    background: url('https://i.pinimg.com/564x/e6/e7/cf/e6e7cfc4c79c7a97aa2faab7a9a93c18.jpg') no-repeat center center fixed;
-    background-size: cover;
-    background-color: white;
+    background: linear-gradient(135deg, #e0f2e9, #d0e6d1);
   }
   
   .checkin-container33 {
@@ -41,7 +39,7 @@
   }
   
   .result-item33 {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     padding: 10px;
     margin: 10px 0;

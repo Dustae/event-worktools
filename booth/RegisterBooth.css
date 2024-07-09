@@ -3,18 +3,16 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url('https://i.pinimg.com/564x/e6/e7/cf/e6e7cfc4c79c7a97aa2faab7a9a93c18.jpg') no-repeat center center fixed;
-  background-size: cover;
-  background-color: white;
+  background: linear-gradient(135deg, #e0f2e9, #d0e6d1);
 }
 
 /* Wrapper styling */
 .wrapper11 {
-  width: 420px;
+  width: 30%;
   border: 2px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(30px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  color: #fff;
+  color: #000000;
   border-radius: 40px;
   padding: 30px 40px;
   display: flex;
@@ -22,6 +20,7 @@
   justify-content: center;
   align-items: center;
   height: auto;
+  background: #ffffff;
 }
 
 /* Heading styling */
@@ -46,23 +45,23 @@
 .input-box11 input {
   width: 100%;
   padding: 15px 20px; /* Adjusted padding */
-  background: rgba(255, 255, 255, 0.8); /* Light background for inputs */
+  background: rgba(247, 247, 247, 0.8); /* Light background for inputs */
   outline: none;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(0, 0, 0, 0.2);
   border-radius: 40px;
   font-size: 14px; /* Reduced font size */
   color: #333;
 }
 
 .input-box11 input::placeholder {
-  color: #999;
+  color: #000000;
 }
 
 /* Button styling */
 .wrapper11 button {
   width: 100%;
   height: 45px;
-  background: #333;
+  background: #60db4f;
   border: none;
   outline: none;
   border-radius: 40px;
@@ -87,13 +86,14 @@
 }
 
 .register-link11 p a {
-  color: #fff;
+  color: #0f20db;
   text-decoration: none;
   font-weight: 600;
 }
 
 .register-link11 p a:hover {
   text-decoration: underline;
+  color: rgb(72, 14, 220);
 }
 
 /* Back link styling */
@@ -109,7 +109,7 @@
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
   .wrapper11 {
-    width: 80%; /* Adjusted width */
+    width: 60%; /* Adjusted width */
     padding: 20px; /* Adjusted padding */
   }
 
@@ -128,7 +128,7 @@
 
 @media (max-width: 480px) {
   .wrapper11 {
-    width: 90%; /* Adjusted width */
+    width: 50%; /* Adjusted width */
     padding: 15px; /* Adjusted padding */
   }
 

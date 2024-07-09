@@ -15,7 +15,7 @@ function Promo() {
             <h3>Feature</h3>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod<br />tempor incididunt ut labore et dolore.</p>
             <p>
-              <a href="/work" className="w3-button w3-green">
+              <a href="/work" className="w3-button w3-gray">
                 <i className="fa fa-th"> </i> View Our Works
               </a>
             </p>
@@ -25,7 +25,7 @@ function Promo() {
               className="w3-image w3-round-large"
               src="https://www.t-stone.co.th/wp-content/uploads/2019/06/bg.jpg"
               alt="Buildings"
-              width="700"
+              width="500"
               height="394"
             />
           </div>

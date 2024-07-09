@@ -43,7 +43,7 @@ const LoginBooth = () => {
           <FaCheck className="checkin-icon22" />
          
           <h1 className='text23'>Check-In</h1>
-          <p className='text22'>Enter your details to check-in</p>
+          <p className='text24'>Enter your details to check-in</p>
           
           <form onSubmit={handleSearch} className="input-group22">
             <input

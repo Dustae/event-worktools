@@ -3,9 +3,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: url('https://i.pinimg.com/564x/e6/e7/cf/e6e7cfc4c79c7a97aa2faab7a9a93c18.jpg') no-repeat center center fixed;
-  background-size: cover;
-  background-color: white;
+  background: linear-gradient(135deg, #e0f2e9, #d0e6d1);
 }
 
 .checkin-container22 {
@@ -25,6 +23,7 @@
   max-width: 400px;
   width: 100%;
   color: #fff;
+  
 }
 
 .checkin-icon22 {
@@ -36,7 +35,13 @@
 .text23 {
   margin-bottom: 20px;
   font-size: 40px;
-  color: #ffffff;
+  color: #000000;
+}
+
+.text24 {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #000000;
 }
 
 .text22 {
@@ -54,7 +59,7 @@
 .input-group22 input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;  
   border-radius: 5px;
   margin-bottom: 10px; /* Add space between inputs */
   font-size: 16px; /* Adjust font size for better appearance */
@@ -89,6 +94,7 @@
   background-color: #333; /* Corrected background color */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 10px;
+  color: #ffffff;
 }
 
 .result-item22 {
@@ -126,18 +132,19 @@
 }
 
 .checkin-button22:hover {
-  background: #4caf50; 
+  background: #000000; 
 }
 
 
 .register-link22 p {
   font-size: 14px;
-  color: #ffffff;
+  color: #000000;
 }
 
 .register-link22 p a {
-  color: #333;
+  color: #0f20db;
   text-decoration: none;
+  font-weight: 600;
 }
 
 .register-link22 p a:hover {
