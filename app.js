@@ -28,9 +28,9 @@ readdirSync('./Routes').map((r) => app.use('/api', require('./Routes/' + r)))
 
 // (async () => {
 //     try {
-//         const response = db.collection('event');
+//         const response = db.collection('event').doc();
 //         const doc = await response.get();
-//         console.log(doc.query);
+//         console.log(doc.data());
 //     } catch (error) {
 //         console.error(error);
 //     }

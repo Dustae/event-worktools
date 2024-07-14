@@ -1,13 +1,15 @@
 const express = require('express')
 const router = express.Router()
 
-const { } = require('../')
+// const { } = require('../')
 
 // end user PUBLIC checkin
 router.post('/checkin_public', )
 
 // end user PRIVATE checkin
-router.post('/checkin_private', )
+router.get('/checkin_private', )
+
+router.put('/update_private',)
 
 // company register
 router.post('/register', )
@@ -22,7 +24,7 @@ router.get('/allevent', )
 router.post('/create_event', )
 
 // edit event data
-router.post('/edit_event', )
+router.put('/edit_event', )
 
 
 
