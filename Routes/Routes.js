@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-// const { } = require('../')
+const { create_event } = require('../CRUD/crud')
 
 // end user PUBLIC checkin
 router.post('/checkin_public', )
@@ -21,7 +21,7 @@ router.get('/login', )
 router.get('/allevent', )
 
 // create new event
-router.post('/create_event', )
+router.post('/create_event', create_event)
 
 // edit event data
 router.put('/edit_event', )

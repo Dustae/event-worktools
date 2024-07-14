@@ -1,4 +1,4 @@
-const { use } = require('../Routes/room');
+const { use } = require('../Routes/Routes');
 const serviceAccount = require('../key.json');
 const admin = require('firebase-admin');
 
@@ -19,14 +19,14 @@ const extractKeys = (obj, keys) => {
 
 
   exports.checkin_public = async (req, res ) =>{
-    const { param1, param2 } = req.query;
+    // const { param1, param2 } = req.query;
 
-    // Do something with the parameters
-    console.log('Param1:', param1);
-    console.log('Param2:', param2);
+    // // Do something with the parameters
+    // console.log('Param1:', param1);
+    // console.log('Param2:', param2);
 
-    // Send a response
-    res.send('Parameters received');
+    // // Send a response
+    // res.send('Parameters received');
   }
 
   exports.checkin_private = async (req, res ) => {
@@ -42,15 +42,23 @@ const extractKeys = (obj, keys) => {
   }
 
   exports.create_event = async (req, res ) => {
-    
     try{
 
       const requiredFields = [
         'detail', 
         'event_type', 
-        'id',
         'location',
-        'name'
+        'name',
+        'option1',
+        'option2',
+        'option3',
+        'option4',
+        'option5',
+        'option6',
+        'option7',
+        'option8',
+        'option9',
+        'option10'
       ];
   
       for (const field of requiredFields) {
@@ -61,10 +69,10 @@ const extractKeys = (obj, keys) => {
             });
         }
       }
-  
+
       const checkEventName = await db.collection('event').doc(req.body.name).get();
           
-          if( !checkEventName.exists ) { 
+          if( checkEventName.exists ) { 
               res.status(409).json( { 
                   message: 'Has a duplicated event name', 
                   status: 'error'});
@@ -75,17 +83,28 @@ const extractKeys = (obj, keys) => {
             eventData = {
               detail : req.body.detail,
               event_type : req.body.event_type,
-              id : req.body.id,
               location : req.body.location,
+              bg : null,
+              banner: null,
+              option1 : req.body.option1,
+              option2 : req.body.option2,
+              option3 : req.body.option3,
+              option4 : req.body.option4,
+              option5 : req.body.option5,
+              option6 : req.body.option6,
+              option7 : req.body.option7,
+              option8 : req.body.option8,
+              option9 : req.body.option9,
+              option10 : req.body.option10
             }
   
-            const res = await db.collection('event').doc(req.body.name).set(eventData);
+            const response = await db.collection('event').doc(req.body.name).set(eventData);
   
-            res.status(200).json( { message: 'Reservation success', status: 'success'});
+            res.status(200).json( { message: 'Resrevation success', status: 'success'});
           }
 
     } catch(error) {
-      res.status(500).json( { message: 'Can not reservation', status: 'error', err_note: error.message});
+      res.status(500).json( { message: 'Can not create event', status: 'error', err_note: error.message});
     }
     
 

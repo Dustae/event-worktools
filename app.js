@@ -2,14 +2,18 @@ const express = require('express')
 const app = express()
 const { readdirSync } = require('fs')
 
-const serviceAccount = require('./key.json');
-const admin = require('firebase-admin');
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
-admin.initializeApp( { 
-    credential: admin.credential.cert(serviceAccount)
-})
 
-const db = admin.firestore();
+// const serviceAccount = require('key.json');
+// const admin = require('firebase-admin');
+
+// admin.initializeApp( { 
+//     credential: admin.credential.cert(serviceAccount)
+// })
+
+// const db = admin.firestore();
 
 // const extractKeys = (obj, keys) => {
 //     return keys.reduce((acc, key) => {
