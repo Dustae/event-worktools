@@ -38,6 +38,62 @@ const extractKeys = (obj, keys) => {
   }
 
   exports.allevent = async (req, res ) => {
+
+    try{
+      const requiredFields = [
+        'org_id'
+      ];
+  
+      for (const field of requiredFields) {
+        if (!req.body[field]) {
+            return res.status(400).json({
+                message: `Missing required field: ${field}`,
+                status: 'error',
+            });
+        }
+      }
+
+      const orgRef = db.doc(`organizor/${req.body.org_id}`);
+
+      const response = await db.collection('event').where('org_id', '==', orgRef).get();
+
+      if( response.empty){
+        return res.status(404).send('No documents found.');
+      }
+      let events = [];
+      response.forEach(doc => {
+        events.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+      // Create JSON data from the retrieved documents
+      const jsonData = events.map(event => ({
+        event_id: event.id,
+        detail: event.detail,
+        event_type: event.event_type,
+        location: event.location,
+        bg: event.bg ? null : null, 
+        banner: event.banner ? null : null, 
+        option1: event.option1,
+        option2: event.option2,
+        option3: event.option3,
+        option4: event.option4,
+        option5: event.option5,
+        option6: event.option6,
+        option7: event.option7,
+        option8: event.option8,
+        option9: event.option9,
+        option10: event.option10
+      }));
+
+      res.status(200).send(jsonData);
+
+    }catch(error){
+      res.status(500).json( { message: 'Can not get event infomation', status: 'error', err_note: error.message});
+    }
+
     
   }
 
@@ -100,7 +156,7 @@ const extractKeys = (obj, keys) => {
   
             const response = await db.collection('event').doc(req.body.name).set(eventData);
   
-            res.status(200).json( { message: 'Resrevation success', status: 'success'});
+            res.status(200).json( { message: 'create event success', status: 'success'});
           }
 
     } catch(error) {
