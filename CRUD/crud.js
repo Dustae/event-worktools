@@ -30,11 +30,79 @@ const extractKeys = (obj, keys) => {
   }
 
   exports.checkin_private = async (req, res ) => {
+    try{
 
+    }catch(error){
+
+    }
+  }
+
+  exports.register = async (req, res ) => {
+    const requiredFields = [
+      'org_name',
+      'org_phone',
+      'password',
+      'username',
+      'org_address',
+      'contact_person'
+    ];
+
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+          return res.status(400).json({
+              message: `Missing required field: ${field}`,
+              status: 'error',
+          });
+      }
+    }
+
+    const checkUsername = await db.collection('organizor').where('username', "==", req.body.username).get();
+          
+    if( checkUsername.exists ) { 
+        return res.status(409).json( { 
+            message: 'Has a duplicated username', 
+            status: 'error'});
+    }
+
+    const userData = {
+      'org_name': req.body.org_name,
+      'org_phone':  req.body.org_phone,
+      'password':  req.body.password,
+      'username':  req.body.username,
+      'org_address':  req.body.org_address,
+      'contact_person':  req.body.contact_person 
+    }
+
+    const response = await db.collection('organizor').add(userData);
+  
+    res.status(200).json( { message: 'register account success', status: 'success'});
   }
 
   exports.login = async (req, res ) => {
+    try{
+      const requiredFields = [
+        'username',
+        'password'
+      ];
+  
+      for (const field of requiredFields) {
+        if (!req.body[field]) {
+            return res.status(400).json({
+                message: `Missing required field: ${field}`,
+                status: 'error',
+            });
+        }
+      }
 
+      if (authenticateUser(username, password)) {
+        res.status(200).json({ message: 'Login successful', token: generateToken(username) });
+      } else {
+          res.status(401).json({ message: 'Invalid username or password' });
+      }
+
+    }catch(error){
+
+    }
   }
 
   exports.allevent = async (req, res ) => {
