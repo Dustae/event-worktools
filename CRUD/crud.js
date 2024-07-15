@@ -19,21 +19,150 @@ const extractKeys = (obj, keys) => {
 
 
   exports.checkin_public = async (req, res ) =>{
-    // const { param1, param2 } = req.query;
+    try{
+      const requiredFields = [
+        'event_name',
+        'name',
+        'surname',
+        'email',
+        'phone',
+      ];
 
-    // // Do something with the parameters
-    // console.log('Param1:', param1);
-    // console.log('Param2:', param2);
+      for (const field of requiredFields) {
+        if (!req.body[field]) {
+            return res.status(400).json({
+                message: `Missing required field: ${field}`,
+                status: 'error',
+            });
+        }
+      }
 
-    // // Send a response
-    // res.send('Parameters received');
+      let userInput = req.body;
+      const event_name = req.body.event_name;
+      delete userInput.event_name;
+
+      const response = db.collection('event').doc(event_name).collection('participant').add(userInput);
+
+      res.status(200).json( { message: 'checkin success', status: 'success'});
+    }catch(error){
+
+      res.status(500).json( { message: 'Can not checkin', status: 'error', err_note: error.message});
+
+    }
   }
 
   exports.checkin_private = async (req, res ) => {
     try{
+      const requiredFields = [
+        'event_name'
+        // 'name',
+        // 'surname',
+        // 'phone',
+        // 'email'
+      ];
+  
+      for (const field of requiredFields) {
+        if (!req.body[field]) {
+            return res.status(400).json({
+                message: `Missing required field: ${field}`,
+                status: 'error',
+            });
+        }
+      }
+      let searchParticipant
+      if (req.body.name) {
+           searchParticipant = await db.collection('event').doc(req.body.event_name)
+                                            .collection('participant').where('name', '==', req.body.name).get();
+          //  res.status(200).json( { message: 'create event success', status: 'success', data: searchParticipant.docs});
+      }
+
+      else if (req.body.surname) {
+           searchParticipant = await db.collection('event').doc(req.body.event_name)
+                                            .collection('participant').where('surname', '==', req.body.surname).get();
+          //  res.status(200).json( { message: 'create event success', status: 'success', data: searchParticipant.docs.every()});
+      }
+
+      else if (req.body.phone) {
+           searchParticipant = await db.collection('event').doc(req.body.event_name)
+                                            .collection('participant').where('phone', '==', req.body.phone).get();
+          //  res.status(200).json( { message: 'create event success', status: 'success', data: searchParticipant.docs.every()});
+
+      }
+
+      else if (req.body.email) {
+           searchParticipant = await db.collection('event').doc(req.body.event_name)
+                                            .collection('participant').where('email', '==', req.body.email).get();
+          //  res.status(200).json( { message: 'create event success', status: 'success', data: searchParticipant.docs.every()});
+      }
+
+      if ( searchParticipant.empty) {
+        return res.status(404).json({
+            message: "Participant information not found",
+            status: 'error'
+        });
+    }
+
+    // const participantData = searchParticipant.docs.map(doc => {
+    //   const data = doc.data();
+    // });
+
+    let participantData = [];
+      searchParticipant.forEach(doc => {
+        participantData.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+    // const participantData = events.map(event => ({
+    //   event_id: event.id,
+    //   detail: event.detail,
+    //   event_type: event.event_type,
+    //   location: event.location,
+    //   bg: event.bg ? null : null, 
+    //   banner: event.banner ? null : null, 
+    //   option1: event.option1,
+    //   option2: event.option2,
+    //   option3: event.option3,
+    //   option4: event.option4,
+    //   option5: event.option5,
+    //   option6: event.option6,
+    //   option7: event.option7,
+    //   option8: event.option8,
+    //   option9: event.option9,
+    //   option10: event.option10
+    // }));
+
+    res.status(200).json( { message: 'create event success', status: 'success', participantData});
+    }catch(error){
+      res.status(500).json( { message: 'Can not access event detail', status: 'error', err_note: error.message});
+
+    }
+  }
+
+  exports.update_private = async (req, res ) => {
+    try{
+      const requiredFields = [
+        'id',
+        'event_name'
+      ];
+
+      for (const field of requiredFields) {
+        if (!req.body[field]) {
+            return res.status(400).json({
+                message: `Missing required field: ${field}`,
+                status: 'error',
+            });
+        }
+      }
+
+      const updateStatus = db.collection('event').doc(req.body.event_name)
+                              .collection('participant').doc(req.body.id).update({status: 'checked-in'})
+
+      res.status(200).json( { message: 'checkin success', status: 'success'});
 
     }catch(error){
-
+      res.status(500).json( { message: 'Can not checkin', status: 'error', err_note: error.message});
     }
   }
 
@@ -94,12 +223,30 @@ const extractKeys = (obj, keys) => {
         }
       }
 
-      if (authenticateUser(username, password)) {
-        res.status(200).json({ message: 'Login successful', token: generateToken(username) });
-      } else {
-          res.status(401).json({ message: 'Invalid username or password' });
-      }
+      const checkLogin = await db.collection('organizor').where("username","==",req.body.username)
+                                                         .where("password","==",req.body.password).get();
+                                              
+      
+      if( checkLogin.empty ) { 
+        return res.status(401).json( { 
+            message: "Wrong username or password", 
+            status: 'error'});
+        }
 
+        let userData;
+        checkLogin.forEach(doc => {
+            userData = doc.data();
+        });
+        
+        const userInfo = {
+            "org_name": userData.org_name,
+            "org_phone": userData.org_phone,
+            "org_address": userData.org_address,
+            "contact_person": userData.contact_person
+        };
+        
+
+      res.status(200).json( { message: 'Log in success', status: 'success', userInfo});
     }catch(error){
 
     }
