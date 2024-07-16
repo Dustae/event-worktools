@@ -1,6 +1,11 @@
 const { use } = require('../Routes/Routes');
 const serviceAccount = require('../key.json');
 const admin = require('firebase-admin');
+const crypto = require('crypto');
+
+function hashData(data) {
+  return crypto.createHash('sha512').update(data).digest('hex');
+}
 
 admin.initializeApp( { 
     credential: admin.credential.cert(serviceAccount)
@@ -31,8 +36,7 @@ const extractKeys = (obj, keys) => {
       for (const field of requiredFields) {
         if (!req.body[field]) {
             return res.status(400).json({
-                message: `Missing required field: ${field}`,
-                status: 'error',
+                message: `Missing required field: ${field}`
             });
         }
       }
@@ -43,102 +47,67 @@ const extractKeys = (obj, keys) => {
 
       const response = db.collection('event').doc(event_name).collection('participant').add(userInput);
 
-      res.status(200).json( { message: 'checkin success', status: 'success'});
+      res.status(200).json( { message: 'checkin success'});
     }catch(error){
 
-      res.status(500).json( { message: 'Can not checkin', status: 'error', err_note: error.message});
+      res.status(500).json( { message: 'Can not checkin', err_note: error.message});
 
     }
   }
 
-  exports.checkin_private = async (req, res ) => {
-    try{
-      const requiredFields = [
-        'event_name'
-        // 'name',
-        // 'surname',
-        // 'phone',
-        // 'email'
-      ];
+  exports.get_private_list = async (req, res) => {
+    try {
+      const requiredFields = ['event_name'];
   
       for (const field of requiredFields) {
-        if (!req.body[field]) {
-            return res.status(400).json({
-                message: `Missing required field: ${field}`,
-                status: 'error',
-            });
+        if (!req.query[field]) {
+          return res.status(400).json({
+            message: `Missing required field: ${field}`
+          });
         }
       }
-      let searchParticipant
-      if (req.body.name) {
-           searchParticipant = await db.collection('event').doc(req.body.event_name)
-                                            .collection('participant').where('name', '==', req.body.name).get();
-          //  res.status(200).json( { message: 'create event success', status: 'success', data: searchParticipant.docs});
+  
+      let searchParticipant;
+  
+      if (req.query.name) {
+        searchParticipant = await db.collection('event').doc(req.query.event_name)
+          .collection('participant').where('name', '==', req.query.name).get();
+      } else if (req.query.surname) {
+        searchParticipant = await db.collection('event').doc(req.query.event_name)
+          .collection('participant').where('surname', '==', req.query.surname).get();
+      } else if (req.query.phone) {
+        searchParticipant = await db.collection('event').doc(req.query.event_name)
+          .collection('participant').where('phone', '==', req.query.phone).get();
+      } else if (req.query.email) {
+        searchParticipant = await db.collection('event').doc(req.query.event_name)
+          .collection('participant').where('email', '==', req.query.email).get();
       }
-
-      else if (req.body.surname) {
-           searchParticipant = await db.collection('event').doc(req.body.event_name)
-                                            .collection('participant').where('surname', '==', req.body.surname).get();
-          //  res.status(200).json( { message: 'create event success', status: 'success', data: searchParticipant.docs.every()});
-      }
-
-      else if (req.body.phone) {
-           searchParticipant = await db.collection('event').doc(req.body.event_name)
-                                            .collection('participant').where('phone', '==', req.body.phone).get();
-          //  res.status(200).json( { message: 'create event success', status: 'success', data: searchParticipant.docs.every()});
-
-      }
-
-      else if (req.body.email) {
-           searchParticipant = await db.collection('event').doc(req.body.event_name)
-                                            .collection('participant').where('email', '==', req.body.email).get();
-          //  res.status(200).json( { message: 'create event success', status: 'success', data: searchParticipant.docs.every()});
-      }
-
-      if ( searchParticipant.empty) {
+  
+      if (searchParticipant.empty) {
         return res.status(404).json({
-            message: "Participant information not found",
-            status: 'error'
+          message: "Participant information not found"
         });
-    }
-
-    // const participantData = searchParticipant.docs.map(doc => {
-    //   const data = doc.data();
-    // });
-
-    let participantData = [];
+      }
+  
+      let participantData = [];
       searchParticipant.forEach(doc => {
         participantData.push({
           id: doc.id,
           ...doc.data()
         });
       });
-
-    // const participantData = events.map(event => ({
-    //   event_id: event.id,
-    //   detail: event.detail,
-    //   event_type: event.event_type,
-    //   location: event.location,
-    //   bg: event.bg ? null : null, 
-    //   banner: event.banner ? null : null, 
-    //   option1: event.option1,
-    //   option2: event.option2,
-    //   option3: event.option3,
-    //   option4: event.option4,
-    //   option5: event.option5,
-    //   option6: event.option6,
-    //   option7: event.option7,
-    //   option8: event.option8,
-    //   option9: event.option9,
-    //   option10: event.option10
-    // }));
-
-    res.status(200).json( { message: 'create event success', status: 'success', participantData});
-    }catch(error){
-      res.status(500).json( { message: 'Can not access event detail', status: 'error', err_note: error.message});
-
+  
+      res.status(200).json({
+        message: 'Create event success',
+        participantData
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: 'Cannot access event detail',
+        err_note: error.message
+      });
     }
-  }
+  };
 
   exports.update_private = async (req, res ) => {
     try{
@@ -150,8 +119,7 @@ const extractKeys = (obj, keys) => {
       for (const field of requiredFields) {
         if (!req.body[field]) {
             return res.status(400).json({
-                message: `Missing required field: ${field}`,
-                status: 'error',
+                message: `Missing required field: ${field}`
             });
         }
       }
@@ -159,10 +127,10 @@ const extractKeys = (obj, keys) => {
       const updateStatus = db.collection('event').doc(req.body.event_name)
                               .collection('participant').doc(req.body.id).update({status: 'checked-in'})
 
-      res.status(200).json( { message: 'checkin success', status: 'success'});
+      res.status(200).json( { message: 'checkin success'});
 
     }catch(error){
-      res.status(500).json( { message: 'Can not checkin', status: 'error', err_note: error.message});
+      res.status(500).json( { message: 'Can not checkin', err_note: error.message});
     }
   }
 
@@ -179,24 +147,23 @@ const extractKeys = (obj, keys) => {
     for (const field of requiredFields) {
       if (!req.body[field]) {
           return res.status(400).json({
-              message: `Missing required field: ${field}`,
-              status: 'error',
+              message: `Missing required field: ${field}`
           });
       }
     }
 
     const checkUsername = await db.collection('organizor').where('username', "==", req.body.username).get();
           
-    if( checkUsername.exists ) { 
+    if( !checkUsername.empty ) { 
         return res.status(409).json( { 
-            message: 'Has a duplicated username', 
-            status: 'error'});
+            message: 'Has a duplicated username'
+          });
     }
 
     const userData = {
       'org_name': req.body.org_name,
       'org_phone':  req.body.org_phone,
-      'password':  req.body.password,
+      'password':  hashData(req.body.password),
       'username':  req.body.username,
       'org_address':  req.body.org_address,
       'contact_person':  req.body.contact_person 
@@ -204,7 +171,7 @@ const extractKeys = (obj, keys) => {
 
     const response = await db.collection('organizor').add(userData);
   
-    res.status(200).json( { message: 'register account success', status: 'success'});
+    res.status(200).json( { message: 'register account success'});
   }
 
   exports.login = async (req, res ) => {
@@ -217,20 +184,18 @@ const extractKeys = (obj, keys) => {
       for (const field of requiredFields) {
         if (!req.body[field]) {
             return res.status(400).json({
-                message: `Missing required field: ${field}`,
-                status: 'error',
+                message: `Missing required field: ${field}`
             });
         }
       }
 
       const checkLogin = await db.collection('organizor').where("username","==",req.body.username)
-                                                         .where("password","==",req.body.password).get();
+                                                         .where("password","==",hashData(req.body.password)).get();
                                               
       
       if( checkLogin.empty ) { 
         return res.status(401).json( { 
-            message: "Wrong username or password", 
-            status: 'error'});
+            message: "Wrong username or password"});
         }
 
         let userData;
@@ -246,71 +211,68 @@ const extractKeys = (obj, keys) => {
         };
         
 
-      res.status(200).json( { message: 'Log in success', status: 'success', userInfo});
+      res.status(200).json( { message: 'Log in success', userInfo});
     }catch(error){
 
     }
   }
 
-  exports.allevent = async (req, res ) => {
+  exports.allevent = async (req, res) => {
+    try {
+        const requiredFields = [
+            'org_id'
+        ];
 
-    try{
-      const requiredFields = [
-        'org_id'
-      ];
-  
-      for (const field of requiredFields) {
-        if (!req.body[field]) {
-            return res.status(400).json({
-                message: `Missing required field: ${field}`,
-                status: 'error',
-            });
+        for (const field of requiredFields) {
+            if (!req.query[field]) {
+                return res.status(400).json({
+                    message: `Missing required field: ${field}`
+                });
+            }
         }
-      }
 
-      const orgRef = db.doc(`organizor/${req.body.org_id}`);
+        const orgRef = db.doc(`organizor/${req.query.org_id}`);
 
-      const response = await db.collection('event').where('org_id', '==', orgRef).get();
+        const response = await db.collection('event').where('org_id', '==', orgRef).get();
 
-      if( response.empty){
-        return res.status(404).send('No documents found.');
-      }
-      let events = [];
-      response.forEach(doc => {
-        events.push({
-          id: doc.id,
-          ...doc.data()
+        if (response.empty) {
+            return res.status(404).send('No documents found.');
+        }
+
+        let events = [];
+        response.forEach(doc => {
+            events.push({
+                id: doc.id,
+                ...doc.data()
+            });
         });
-      });
 
-      // Create JSON data from the retrieved documents
-      const jsonData = events.map(event => ({
-        event_id: event.id,
-        detail: event.detail,
-        event_type: event.event_type,
-        location: event.location,
-        bg: event.bg ? null : null, 
-        banner: event.banner ? null : null, 
-        option1: event.option1,
-        option2: event.option2,
-        option3: event.option3,
-        option4: event.option4,
-        option5: event.option5,
-        option6: event.option6,
-        option7: event.option7,
-        option8: event.option8,
-        option9: event.option9,
-        option10: event.option10
-      }));
+        // Create JSON data from the retrieved documents
+        const jsonData = events.map(event => ({
+            event_id: event.id,
+            detail: event.detail,
+            event_type: event.event_type,
+            location: event.location,
+            bg: event.bg ? null : null,
+            banner: event.banner ? null : null,
+            option1: event.option1,
+            option2: event.option2,
+            option3: event.option3,
+            option4: event.option4,
+            option5: event.option5,
+            option6: event.option6,
+            option7: event.option7,
+            option8: event.option8,
+            option9: event.option9,
+            option10: event.option10
+        }));
 
-      res.status(200).send(jsonData);
+        res.status(200).send(jsonData);
 
-    }catch(error){
-      res.status(500).json( { message: 'Can not get event infomation', status: 'error', err_note: error.message});
+    } catch (error) {
+        res.status(500).json({ message: 'Can not get event information', err_note: error.message });
     }
-
-    
-  }
+}
 
   exports.create_event = async (req, res ) => {
     try{
@@ -335,8 +297,7 @@ const extractKeys = (obj, keys) => {
       for (const field of requiredFields) {
         if (!req.body[field]) {
             return res.status(400).json({
-                message: `Missing required field: ${field}`,
-                status: 'error',
+                message: `Missing required field: ${field}`
             });
         }
       }
@@ -345,8 +306,7 @@ const extractKeys = (obj, keys) => {
           
           if( checkEventName.exists ) { 
               res.status(409).json( { 
-                  message: 'Has a duplicated event name', 
-                  status: 'error'});
+                  message: 'Has a duplicated event name'});
           }
   
           // no booking at that time 
@@ -371,11 +331,11 @@ const extractKeys = (obj, keys) => {
   
             const response = await db.collection('event').doc(req.body.name).set(eventData);
   
-            res.status(200).json( { message: 'create event success', status: 'success'});
+            res.status(200).json( { message: 'create event success'});
           }
 
     } catch(error) {
-      res.status(500).json( { message: 'Can not create event', status: 'error', err_note: error.message});
+      res.status(500).json( { message: 'Can not create event', err_note: error.message});
     }
     
 
@@ -383,5 +343,37 @@ const extractKeys = (obj, keys) => {
   }
 
   exports.edit_event = async (req, res ) => {
-    
+    try{
+      const updates = {};
+      const fields = [
+        'detail',
+        'event_type',
+        'location',
+        'bg',
+        'banner',
+        'option1',
+        'option2',
+        'option3',
+        'option4',
+        'option5',
+        'option6',
+        'option7',
+        'option8',
+        'option9',
+        'option10'
+      ];
+
+      
+      fields.forEach(field => {
+        if (req.body[field] !== undefined) {
+          updates[field] = req.body[field];
+        }
+      });
+
+      await db.collection('event').doc(req.body.event_id).update(updates);
+
+      res.status(200).json( { message: 'update event success'});
+    }catch(error){
+      res.status(500).json( { message: 'Can not update event', err_note: error.message});
+    }
   }

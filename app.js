@@ -1,33 +1,17 @@
 const express = require('express')
-const app = express()
 const { readdirSync } = require('fs')
+const { swaggerUi , swaggerSpec } = require('./swaggerDoc')
+const app = express()
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 
-// const serviceAccount = require('key.json');
-// const admin = require('firebase-admin');
 
-// admin.initializeApp( { 
-//     credential: admin.credential.cert(serviceAccount)
-// })
-
-// const db = admin.firestore();
-
-// const extractKeys = (obj, keys) => {
-//     return keys.reduce((acc, key) => {
-//       if (obj.hasOwnProperty(key)) {
-//         acc[key] = obj[key];
-//       }
-//       return acc;
-//     }, {});
-//   };
-
-
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // read routes from /Routes
-readdirSync('./Routes').map((r) => app.use('/api', require('./Routes/' + r)))
+readdirSync('./Routes').map((r) => app.use('/v1/api', require('./Routes/' + r)))
 
 
 // (async () => {
