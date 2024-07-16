@@ -8,10 +8,10 @@ const { create_event , allevent ,
 /**
  * Add participant to a public event.
  * @swagger
- * /v1/api/event/public:
+ * /v1/api/participant/public:
  *   post:
  *     summary: Add participant to a public event.
- *     tags: [Events]
+ *     tags: [Participant]
  *     description: Endpoint to add a participant to a public event.
  *     requestBody:
  *       required: true
@@ -79,15 +79,15 @@ const { create_event , allevent ,
  *                   type: string
  *                   description: Error details.
  */
-router.post('/event/public', checkin_public)
+router.post('/participant/public', checkin_public)
 
 /**
  * Retrieve participant details from a private event.
  * @swagger
- * /v1/api/event/private:
+ * /v1/api/participant/private:
  *   get:
  *     summary: Retrieve participant details from a private event.
- *     tags: [Events]
+ *     tags: [Participant]
  *     description: Endpoint to retrieve participant details from a private event based on specified query parameters.
  *     parameters:
  *       - in: query
@@ -201,15 +201,15 @@ router.post('/event/public', checkin_public)
  *                   description: Error details.
  */
 
-router.get('/event/private', get_private_list)
+router.get('/participant/private', get_private_list)
 
 /**
  * Update participant status in a private event.
  * @swagger
- * /v1/api/event/private:
+ * /v1/api/participant/private:
  *   put:
  *     summary: Update participant status in a private event.
- *     tags: [Events]
+ *     tags: [Participant]
  *     description: Endpoint to update the status of a participant in a private event.
  *     requestBody:
  *       required: true
@@ -265,7 +265,7 @@ router.get('/event/private', get_private_list)
  *                   description: Error details.
  */
 
-router.put('/event/private', update_private)
+router.put('/participant/private', update_private)
 
 /**
  * Register a new organization account.
@@ -449,10 +449,10 @@ router.post('/org/login', login)
 /**
  * Retrieve all events associated with an organization.
  * @swagger
- * /v1/api/org/listevent:
+ * /v1/api/org/event:
  *   get:
  *     summary: Retrieve all events associated with an organization.
- *     tags: [Organizors]
+ *     tags: [Events]
  *     description: Endpoint to retrieve all events associated with an organization based on organization ID.
  *     parameters:
  *       - in: query
@@ -572,15 +572,15 @@ router.post('/org/login', login)
  *                   description: Error details.
  */
 
-router.get('/org/listevent', allevent)
+router.get('/org/event', allevent)
 
 /**
  * Create a new event for an organization.
  * @swagger
- * /v1/api/org/create_event:
+ * /v1/api/org/event:
  *   post:
  *     summary: Create a new event for an organization.
- *     tags: [Organizors]
+ *     tags: [Events]
  *     description: Endpoint to create a new event for an organization.
  *     requestBody:
  *       required: true
@@ -695,15 +695,15 @@ router.get('/org/listevent', allevent)
  *                   description: Error details.
  */
 
-router.post('/org/create_event', create_event)
+router.post('/org/event', create_event)
 
 /**
  * Edit an existing event details.
  * @swagger
- * /v1/api/org/edit_event:
+ * /v1/api/org/event:
  *   put:
  *     summary: Edit an existing event details.
- *     tags: [Organizors]
+ *     tags: [Events]
  *     description: Endpoint to edit details of an existing event.
  *     requestBody:
  *       required: true
@@ -815,7 +815,7 @@ router.post('/org/create_event', create_event)
  *                   description: Error details.
  */
 
-router.put('/org/edit_event', edit_event)
+router.put('/org/event', edit_event)
 
 // import participant data
 
