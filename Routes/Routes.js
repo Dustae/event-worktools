@@ -532,7 +532,7 @@ router.post('/org/login', login)
  *                     example: "Option 9"
  *                   option10:
  *                     type: string
- *                     description
+ *                     description:
  *                     example: "Option 10"
  *       400:
  *         description: Missing required fields in the query parameters.
@@ -571,7 +571,6 @@ router.post('/org/login', login)
  *                   type: string
  *                   description: Error details.
  */
-
 router.get('/org/event', allevent)
 
 /**
@@ -818,5 +817,9 @@ router.post('/org/event', create_event)
 router.put('/org/event', edit_event)
 
 // import participant data
+
+
+
+
 
 module.exports = router
