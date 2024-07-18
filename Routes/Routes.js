@@ -650,6 +650,10 @@ router.get('/org/event', allevent)
  *                 type: string
  *                 description: Optional data field 10 for the event.
  *                 example: "Option 10"
+ *               org_id:
+ *                 type: string
+ *                 description: organizer id
+ *                 example: "9vg04R6Ays5tLQQYc7Fu"
  *     responses:
  *       200:
  *         description: Event created successfully.
