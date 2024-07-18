@@ -3,15 +3,32 @@ const serviceAccount = require('../key.json');
 const admin = require('firebase-admin');
 const crypto = require('crypto');
 
+const multer = require('multer');
+
+admin.initializeApp( { 
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: 'gs://organizer-web-tstone.appspot.com'
+})
+
+const db = admin.firestore();
+
+const { Storage } = require('@google-cloud/storage');
+const storage = new Storage();
+const bucket = storage.bucket(admin.storage().bucket().name);
+
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024 // no larger than 5mb
+  }
+});
+
+
 function hashData(data) {
   return crypto.createHash('sha512').update(data).digest('hex');
 }
 
-admin.initializeApp( { 
-    credential: admin.credential.cert(serviceAccount)
-})
-
-const db = admin.firestore();
 
 const extractKeys = (obj, keys) => {
     return keys.reduce((acc, key) => {
@@ -45,7 +62,8 @@ const extractKeys = (obj, keys) => {
       const event_name = req.body.event_name;
       delete userInput.event_name;
 
-      const response = db.collection('event').doc(event_name).collection('participant').add(userInput);
+      const EventDoc =  (await db.collection('event').where('name','==',event_name).get()).docs[0].ref;
+      const response = await EventDoc.collection('participant').add(userInput);
 
       res.status(200).json( { message: 'checkin success'});
     }catch(error){
@@ -68,18 +86,19 @@ const extractKeys = (obj, keys) => {
       }
   
       let searchParticipant;
+      const EventDoc =  (await db.collection('event').where('name','==',event_name).get()).docs[0].ref;
   
       if (req.query.name) {
-        searchParticipant = await db.collection('event').doc(req.query.event_name)
+        searchParticipant = await EventDoc
           .collection('participant').where('name', '==', req.query.name).get();
       } else if (req.query.surname) {
-        searchParticipant = await db.collection('event').doc(req.query.event_name)
+        searchParticipant = await EventDoc
           .collection('participant').where('surname', '==', req.query.surname).get();
       } else if (req.query.phone) {
-        searchParticipant = await db.collection('event').doc(req.query.event_name)
+        searchParticipant = await EventDoc
           .collection('participant').where('phone', '==', req.query.phone).get();
       } else if (req.query.email) {
-        searchParticipant = await db.collection('event').doc(req.query.event_name)
+        searchParticipant = await EventDoc
           .collection('participant').where('email', '==', req.query.email).get();
       }
   
@@ -124,7 +143,9 @@ const extractKeys = (obj, keys) => {
         }
       }
 
-      const updateStatus = db.collection('event').doc(req.body.event_name)
+      const EventDoc =  (await db.collection('event').where('name','==',event_name).get()).docs[0].ref;
+
+      const updateStatus = EventDoc
                               .collection('participant').doc(req.body.id).update({status: 'checked-in'})
 
       res.status(200).json( { message: 'checkin success'});
@@ -291,7 +312,8 @@ const extractKeys = (obj, keys) => {
         'option7',
         'option8',
         'option9',
-        'option10'
+        'option10',
+        'org_id'
       ];
   
       for (const field of requiredFields) {
@@ -302,7 +324,7 @@ const extractKeys = (obj, keys) => {
         }
       }
 
-      const checkEventName = await db.collection('event').doc(req.body.name).get();
+      const checkEventName = await db.collection('event').where('name', '==', req.body.name).get();
           
           if( checkEventName.exists ) { 
               res.status(409).json( { 
@@ -312,6 +334,7 @@ const extractKeys = (obj, keys) => {
           // no booking at that time 
           else {
             eventData = {
+              name : req.body.name,
               detail : req.body.detail,
               event_type : req.body.event_type,
               location : req.body.location,
@@ -326,10 +349,11 @@ const extractKeys = (obj, keys) => {
               option7 : req.body.option7,
               option8 : req.body.option8,
               option9 : req.body.option9,
-              option10 : req.body.option10
+              option10 : req.body.option10,
+              org_id : req.body.org_id
             }
   
-            const response = await db.collection('event').doc(req.body.name).set(eventData);
+            const response = await db.collection('event').set(eventData);
   
             res.status(200).json( { message: 'create event success'});
           }
@@ -377,3 +401,55 @@ const extractKeys = (obj, keys) => {
       res.status(500).json( { message: 'Can not update event', err_note: error.message});
     }
   }
+
+  exports.addpicture = async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+      }
+  
+      const blob = bucket.file(req.file.originalname);
+      const blobStream = blob.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype
+        }
+      });
+  
+      blobStream.on('error', (err) => {
+        res.status(500).send({ error: err.message });
+      });
+  
+      blobStream.on('finish', () => {
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+        res.status(200).send({ fileName: req.file.originalname, fileLocation: publicUrl });
+      });
+  
+      blobStream.end(req.file.buffer);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  };
+  
+  exports.readfile = async (req, res) => {
+    try {
+      const fileName = req.query.filename;
+      console.log(fileName)
+      if (!fileName) {
+        return res.status(400).send('Filename query parameter is required.');
+      }
+  
+      const file = bucket.file(fileName);
+      const [exists] = await file.exists();
+  
+      if (!exists) {
+        console.log(`File does not exist.`);
+        return res.status(404).send('File not found');
+      }
+  
+      const [fileBuffer] = await file.download();
+      res.status(200).send(fileBuffer.toString('base64'));
+    } catch (error) {
+      console.error(`Error reading file `, error);
+      res.status(500).send({ error: error.message });
+    }
+  };

@@ -3,7 +3,17 @@ const router = express.Router()
 
 const { create_event , allevent , 
         login , register , get_private_list ,
-         checkin_public , update_private , edit_event } = require('../CRUD/crud')
+         checkin_public , update_private , edit_event ,
+         addpicture , readfile } = require('../CRUD/crud')
+
+const multer = require('multer');
+
+const upload = multer({
+        storage: multer.memoryStorage(),
+        limits: {
+        fileSize: 5 * 1024 * 1024 // no larger than 5mb
+        }
+});
 
 /**
  * Add participant to a public event.
@@ -200,7 +210,6 @@ router.post('/participant/public', checkin_public)
  *                   type: string
  *                   description: Error details.
  */
-
 router.get('/participant/private', get_private_list)
 
 /**
@@ -264,7 +273,6 @@ router.get('/participant/private', get_private_list)
  *                   type: string
  *                   description: Error details.
  */
-
 router.put('/participant/private', update_private)
 
 /**
@@ -352,7 +360,6 @@ router.put('/participant/private', update_private)
  *                   description: Error message.
  *                   example: "Internal server error"
  */
-
 router.post('/org/register', register)
 
 /**
@@ -443,7 +450,6 @@ router.post('/org/register', register)
  *                   description: Error message.
  *                   example: "Internal server error"
  */
-
 router.post('/org/login', login)
 
 /**
@@ -693,7 +699,6 @@ router.get('/org/event', allevent)
  *                   type: string
  *                   description: Error details.
  */
-
 router.post('/org/event', create_event)
 
 /**
@@ -813,11 +818,73 @@ router.post('/org/event', create_event)
  *                   type: string
  *                   description: Error details.
  */
-
 router.put('/org/event', edit_event)
 
-// import participant data
+/**
+ * @swagger
+ * /v1/api/storage/upload:
+ *   post:
+ *     summary: Upload a picture
+ *     description: Uploads a picture file to Firebase Cloud Storage.
+ *     tags:
+ *       - Storage
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Successfully uploaded the file.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 fileName:
+ *                   type: string
+ *                 fileLocation:
+ *                   type: string
+ *       400:
+ *         description: No file uploaded.
+ *       500:
+ *         description: Internal server error.
+ */
+router.post('/storage/upload', upload.single('file'), addpicture);
 
+/**
+ * @swagger
+ * /v1/api/storage/read:
+ *   get:
+ *     summary: Read a picture
+ *     description: Reads a picture file from Firebase Cloud Storage.
+ *     tags:
+ *       - Storage
+ *     parameters:
+ *       - in: query
+ *         name: filename
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Name of the file to read.
+ *     responses:
+ *       200:
+ *         description: Successfully read the file.
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *       404:
+ *         description: File not found.
+ *       500:
+ *         description: Internal server error.
+ */
+router.get('/storage/read', readfile);
 
 
 
