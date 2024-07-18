@@ -1,0 +1,63 @@
+.container-settings {
+    width: 600px;
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background color */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.card-settings {
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #ffffff; /* White background for cards */
+    border: 1px solid #e0e0e0; /* Light border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+.btn-primary-settings {
+    margin-top: 10px;
+    background-color: #007bff; /* Blue color for primary buttons */
+    color: #ffffff; /* White text */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Padding */
+    cursor: pointer;
+}
+
+.btn-primary-settings:hover {
+    background-color: #70c09a; /* Darker blue on hover */
+}
+
+.btn-danger-settings {
+    margin-top: 20px;
+    background-color: #dc3545; /* Red color for danger buttons */
+    color: #ffffff; /* White text */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Padding */
+    cursor: pointer;
+}
+
+.btn-danger-settings:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+.form-control09 {
+    background-color: #f1f1f1; /* Light grey background for input fields */
+    border: 1px solid #ced4da; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px; /* Padding */
+    margin-bottom: 10px; /* Space between fields */
+}
+
+.form-label09 {
+    font-weight: bold; /* Bold labels */
+    margin-bottom: 5px;
+    padding: 10px; /* Space below labels */
+}
+
+.card-title09 {
+    padding: 15px;
+  }

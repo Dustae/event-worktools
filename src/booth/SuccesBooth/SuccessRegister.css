@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+.success-body1122 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #e0f2e9, #d0e6d1);
+  overflow: hidden;
+  animation: backgroundAnimation 5s infinite alternate;
+}
+
+@keyframes backgroundAnimation {
+  0% {
+    background: linear-gradient(135deg, #e0f2e9, #d0e6d1);
+  }
+  100% {
+    background: linear-gradient(135deg, #d0e6d1, #e0f2e9);
+  }
+}
+
+.success-container1122 {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px 60px;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  transform: scale(0.9);
+  transition: transform 0.3s;
+}
+
+.success-container1122:hover {
+  transform: scale(1);
+}
+
+.success-icon1122 {
+  font-size: 70px;
+  color: #4caf50;
+  margin-bottom: 20px;
+  animation: iconAnimation 1s ease-in-out infinite;
+}
+
+@keyframes iconAnimation {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.text1122 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #333;
+  font-weight: 600;
+}
+
+.text1122 {
+  margin-bottom: 30px;
+  font-size: 18px;
+  color: #666;
+}
+
+.back-button1122 {
+  display: inline-block;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.back-button1122:hover {
+  background-color: #388e3c;
+  transform: scale(1.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .success-container {
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .success-icon {
+    font-size: 50px;
+  }
+
+  .text44 {
+    font-size: 24px;
+  }
+
+  .text45 {
+    font-size: 16px;
+  }
+
+  .back-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

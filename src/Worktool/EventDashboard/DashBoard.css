@@ -1,0 +1,198 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.875rem;
+  overflow-y: scroll;
+  margin: 0;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+}
+
+li {
+  list-style: none;
+}
+
+h4 {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.275rem;
+  color: var(--bs-emphasis-color);
+}
+
+/* Layout for admin dashboard skeleton */
+
+.wrapper52 {
+  align-items: stretch;
+  display: flex;
+  width: 100%;
+}
+
+#sidebar {
+  max-width: 264px;
+  min-width: 264px;
+  background: var(--bs-dark);
+  transition: all 0.35s ease-in-out;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+  overflow: hidden;
+  transition: all 0.35s ease-in-out;
+  width: 100%;
+  background: #ffffff; /* ตัวอย่างใช้สี AliceBlue */
+}
+
+/* Sidebar Elements Style */
+
+.sidebar-logo {
+  padding: 1.15rem;
+}
+
+.sidebar-logo a {
+  color: #adbf97;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.sidebar-nav {
+  list-style: none;
+  margin-bottom: 0;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.sidebar-header {
+  color: #adbf97;
+  font-size: 0.75rem;
+  padding: 1.5rem 1.5rem 0.375rem;
+}
+
+.sidebar-link {
+  padding: 0.625rem 1.625rem;
+  color: #adbf97;
+  display: block;
+  font-size: 0.875rem;
+}
+
+.sidebar-link[data-bs-toggle="collapse"]::after {
+  border: solid;
+  border-width: 0 0.075rem 0.075rem 0;
+  content: "";
+  display: inline-block;
+  padding: 2px;
+  position: absolute;
+  right: 1.5rem;
+  top: 1.4rem;
+  transform: rotate(-135deg);
+  transition: all 0.2s ease-out;
+}
+
+.sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+  transform: rotate(45deg);
+  transition: all 0.2s ease-out;
+}
+
+/* Sidebar Toggle */
+
+#sidebar.collapsed {
+  margin-left: -264px;
+}
+
+/* Navbar and Footer */
+
+.navbar {
+  background: var(--bs-dark-bg-subtle);
+  height: 61px;
+}
+
+.footer {
+  background: var(--bs-dark-bg-subtle);
+  padding: 12px 0;
+}
+
+.footer ul li a {
+  font-size: 0.75rem;
+}
+
+/* Responsive Adjustments */
+
+@media (max-width: 767.98px) {
+  .js-sidebar {
+    margin-left: -264px;
+  }
+
+  #sidebar.collapsed {
+    margin-left: 0;
+  }
+
+  .navbar,
+  .footer {
+    width: 100vw;
+  }
+}
+
+.navbar-expand .navbar-nav {
+  margin-left: auto;
+}
+
+.avatar {
+  height: 40px;
+  width: 40px;
+}
+
+.custom-icon-size {
+  font-size: 1.5rem; /* Adjust size as needed */
+}
+
+.dropdown-menu-end {
+  right: 0;
+  left: auto;
+}
+
+.navbar .nav-item .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+.content {
+  flex: 1;
+  max-width: 100vw;
+  width: 100vw;
+}
+
+@media (min-width: 768px) {
+  .content {
+    max-width: auto;
+    width: auto;
+  }
+}
+
+.export-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.export-button:hover {
+  background-color: #45a049;
+}

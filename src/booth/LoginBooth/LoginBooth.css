@@ -1,0 +1,154 @@
+.body22 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #e0f2e9, #d0e6d1);
+}
+
+.checkin-container22 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.checkin-wrapper22 {
+  background-color: #f8f9fa; /* Changed background color */
+  padding: 20px 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  color: #fff;
+  
+}
+
+.checkin-icon22 {
+  font-size: 50px;
+  color: #4caf50;
+  margin-bottom: 20px;
+}
+
+.text23 {
+  margin-bottom: 20px;
+  font-size: 40px;
+  color: #000000;
+}
+
+.text24 {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #000000;
+}
+
+.text22 {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.input-group22 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-group22 input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #000000;  
+  border-radius: 5px;
+  margin-bottom: 10px; /* Add space between inputs */
+  font-size: 16px; /* Adjust font size for better appearance */
+  transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+.input-group22 input:focus {
+  border-color: #4caf50; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+}
+
+.search-button22 {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px; /* Add margin to push it below the inputs */
+  font-size: 16px; /* Adjust font size for better appearance */
+  transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.search-button22:hover {
+  background-color: #2fcc2a;
+}
+
+.search-results22 {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #333; /* Corrected background color */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  color: #ffffff;
+}
+
+.result-item22 {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.result-item22:last-child {
+  border-bottom: none;
+}
+
+.result-item22 p {
+  margin: 5px 0;
+}
+
+.selected {
+  background-color: #21620f;
+}
+
+.checkin-button22 {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 60%; 
+}
+
+.checkin-button22:disabled {
+  background-color: #000000;
+  cursor: not-allowed;
+}
+
+.checkin-button22:hover {
+  background: #000000; 
+}
+
+
+.register-link22 p {
+  font-size: 14px;
+  color: #000000;
+  padding: 10px;
+}
+
+.register-link22 p a {
+  color: #0f20db;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link22 p a:hover {
+  text-decoration: underline;
+  color: rgb(72, 14, 220);
+}
