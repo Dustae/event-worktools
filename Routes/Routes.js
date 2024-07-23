@@ -11,9 +11,18 @@ const multer = require('multer');
 const upload = multer({
         storage: multer.memoryStorage(),
         limits: {
-        fileSize: 5 * 1024 * 1024 // no larger than 5mb
+          fileSize: 5 * 1024 * 1024 // no larger than 5MB
+        },
+        fileFilter: (req, file, cb) => {
+          const fileTypes = /jpeg|jpg|png/;
+          const mimeType = fileTypes.test(file.mimetype);
+          const extName = fileTypes.test(file.originalname.split('.').pop().toLowerCase());
+          if (mimeType && extName) {
+            return cb(null, true);
+          }
+          cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
         }
-});
+      });
 
 /**
  * Add participant to a public event.
@@ -578,7 +587,6 @@ router.post('/org/login', login)
  *                   description: Error details.
  */
 router.get('/org/event', allevent)
-
 /**
  * Create a new event for an organization.
  * @swagger
@@ -586,11 +594,11 @@ router.get('/org/event', allevent)
  *   post:
  *     summary: Create a new event for an organization.
  *     tags: [Events]
- *     description: Endpoint to create a new event for an organization.
+ *     description: Endpoint to create a new event for an organization. Supports optional background and banner image uploads.
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -652,8 +660,16 @@ router.get('/org/event', allevent)
  *                 example: "Option 10"
  *               org_id:
  *                 type: string
- *                 description: organizer id
+ *                 description: Organizer ID.
  *                 example: "9vg04R6Ays5tLQQYc7Fu"
+ *               bg:
+ *                 type: string
+ *                 format: binary
+ *                 description: Optional background image file for the event.
+ *               banner:
+ *                 type: string
+ *                 format: binary
+ *                 description: Optional banner image file for the event.
  *     responses:
  *       200:
  *         description: Event created successfully.
@@ -703,7 +719,7 @@ router.get('/org/event', allevent)
  *                   type: string
  *                   description: Error details.
  */
-router.post('/org/event', create_event)
+router.post('/org/event', upload.fields([{ name: 'bg', maxCount: 1 }, { name: 'banner', maxCount: 1 }]), create_event)
 
 /**
  * Edit an existing event details.
@@ -891,6 +907,12 @@ router.post('/storage/upload', upload.single('file'), addpicture);
 router.get('/storage/read', readfile);
 
 
-
+router.use((err, req, res, next) => {
+        if (err) {
+          res.status(400).send({ error: err.message });
+        } else {
+          next();
+        }
+      });
 
 module.exports = router

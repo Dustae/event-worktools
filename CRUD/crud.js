@@ -7,13 +7,19 @@ const multer = require('multer');
 
 admin.initializeApp( { 
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'gs://organizer-web-tstone.appspot.com'
+  storageBucket: 'organizer-web-tstone.appspot.com'
 })
 
 const db = admin.firestore();
 
 const { Storage } = require('@google-cloud/storage');
-const storage = new Storage();
+const storage = new Storage({
+  projectId: serviceAccount.project_id,
+  credentials: {
+    client_email: serviceAccount.client_email,
+    private_key: serviceAccount.private_key
+  }
+});
 const bucket = storage.bucket(admin.storage().bucket().name);
 
 
@@ -326,43 +332,81 @@ const extractKeys = (obj, keys) => {
 
       const checkEventName = await db.collection('event').where('name', '==', req.body.name).get();
           
-          if( checkEventName.exists ) { 
-              res.status(409).json( { 
-                  message: 'Has a duplicated event name'});
+      if( checkEventName.exists ) { 
+          return res.status(409).json( { 
+              message: 'Has a duplicated event name'});
+      }
+
+      let bgUrl = null;
+      let bannerUrl = null;
+  
+      if (req.files && req.files.bg) {
+        const bgFile = req.files.bg[0];
+        const bgBlob = bucket.file(bgFile.originalname);
+        const bgBlobStream = bgBlob.createWriteStream({
+          metadata: {
+            contentType: bgFile.mimetype
           }
+        });
   
-          // no booking at that time 
-          else {
-            eventData = {
-              name : req.body.name,
-              detail : req.body.detail,
-              event_type : req.body.event_type,
-              location : req.body.location,
-              bg : null,
-              banner: null,
-              option1 : req.body.option1,
-              option2 : req.body.option2,
-              option3 : req.body.option3,
-              option4 : req.body.option4,
-              option5 : req.body.option5,
-              option6 : req.body.option6,
-              option7 : req.body.option7,
-              option8 : req.body.option8,
-              option9 : req.body.option9,
-              option10 : req.body.option10,
-              org_id : req.body.org_id
-            }
+        bgUrl = await new Promise((resolve, reject) => {
+          bgBlobStream.on('error', reject);
+          bgBlobStream.on('finish', () => {
+            const publicUrl = `${bgBlob.name}`;
+            resolve(publicUrl);
+          });
+          bgBlobStream.end(bgFile.buffer);
+        });
+      }
   
-            const response = await db.collection('event').set(eventData);
-  
-            res.status(200).json( { message: 'create event success'});
+      if (req.files && req.files.banner) {
+        const bannerFile = req.files.banner[0];
+        const bannerBlob = bucket.file(bannerFile.originalname);
+        const bannerBlobStream = bannerBlob.createWriteStream({
+          metadata: {
+            contentType: bannerFile.mimetype
           }
+        });
+  
+        bannerUrl = await new Promise((resolve, reject) => {
+          bannerBlobStream.on('error', reject);
+          bannerBlobStream.on('finish', () => {
+            const publicUrl = `${bannerBlob.name}`;
+            resolve(publicUrl);
+          });
+          bannerBlobStream.end(bannerFile.buffer);
+        });
+      }
+
+      // no booking at that time 
+        eventData = {
+          name : req.body.name,
+          detail : req.body.detail,
+          event_type : req.body.event_type,
+          location : req.body.location,
+          bg : bgUrl,
+          banner: bannerUrl,
+          option1 : req.body.option1,
+          option2 : req.body.option2,
+          option3 : req.body.option3,
+          option4 : req.body.option4,
+          option5 : req.body.option5,
+          option6 : req.body.option6,
+          option7 : req.body.option7,
+          option8 : req.body.option8,
+          option9 : req.body.option9,
+          option10 : req.body.option10,
+          org_id : req.body.org_id
+        }
+
+        const response = await db.collection('event').doc().set(eventData);
+
+        res.status(200).json( { message: 'create event success'});
 
     } catch(error) {
       res.status(500).json( { message: 'Can not create event', err_note: error.message});
     }
     
-
     
   }
 
@@ -409,6 +453,12 @@ const extractKeys = (obj, keys) => {
       }
   
       const blob = bucket.file(req.file.originalname);
+
+      const [exists] = await blob.exists();
+      if (exists) {
+        return res.status(400).send('File already exists. Choose a different name.');
+      }
+
       const blobStream = blob.createWriteStream({
         metadata: {
           contentType: req.file.mimetype
@@ -433,7 +483,7 @@ const extractKeys = (obj, keys) => {
   exports.readfile = async (req, res) => {
     try {
       const fileName = req.query.filename;
-      console.log(fileName)
+      console.log(fileName);
       if (!fileName) {
         return res.status(400).send('Filename query parameter is required.');
       }
@@ -442,14 +492,15 @@ const extractKeys = (obj, keys) => {
       const [exists] = await file.exists();
   
       if (!exists) {
-        console.log(`File does not exist.`);
+        console.log('File does not exist.');
         return res.status(404).send('File not found');
       }
   
+      
       const [fileBuffer] = await file.download();
       res.status(200).send(fileBuffer.toString('base64'));
     } catch (error) {
-      console.error(`Error reading file `, error);
+      console.error('Error reading file', error);
       res.status(500).send({ error: error.message });
     }
   };
