@@ -1,0 +1,88 @@
+.container {
+  font-family: 'Arial', sans-serif;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 1rem;
+  color: #333;
+}
+
+.chart-container {
+  position: relative;
+  height: 400px;
+  width: 100%;
+}
+
+.btn-group .btn {
+  border-radius: 0;
+}
+
+.gradient-card {
+  background: linear-gradient(45deg, #4CAF50, #8BC34A);
+  border: none;
+}
+
+.gradient1 {
+  background: linear-gradient(45deg, #ff6f00, #ffcc80);
+}
+
+.gradient2 {
+  background: linear-gradient(45deg, #00bcd4, #b2ebf2);
+}
+
+.gradient3 {
+  background: linear-gradient(45deg, #ff1744, #ff80ab);
+}
+
+.gradient4 {
+  background: linear-gradient(45deg, #673ab7, #b39ddb);
+}
+
+.gradient5 {
+  background: linear-gradient(45deg, #388e3c, #81c784);
+}
+
+.line-chart-container {
+  margin-top: 20px;
+}
+
+.calendar-icon {
+  margin-right: 10px;
+}
+
+.datepicker {
+  display: inline-block;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.calendar-icon {
+  margin-right: 10px;
+}
+
+.line-chart-container {
+  position: relative;
+}
+
+.datepicker {
+  margin-left: 10px;
+}
+
+.input-group-append button {
+  background-color: #007bff;
+  color: white;
+}
+
+.input-group-append button:hover {
+  background-color: #0056b3;
+}

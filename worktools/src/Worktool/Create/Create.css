@@ -1,0 +1,110 @@
+.event-registration-form {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+}
+
+.event-registration-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.event-registration-form .form-control {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  max-width: 100%; /* เพิ่มเติม */
+}
+
+.event-registration-form .form-control-file {
+  display: none;
+}
+
+.event-registration-form .image-upload {
+  margin-bottom: 15px;
+}
+
+.event-registration-form .image-upload .file-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #333;
+  font-size: 16px;
+}
+
+.event-registration-form .image-upload .icon {
+  margin-right: 10px;
+  font-size: 30px;
+}
+
+.event-registration-form .image-upload .uploaded-file {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #e9e9e9;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.event-registration-form .image-upload .uploaded-file span {
+  font-size: 14px;
+  color: #333;
+}
+
+.event-registration-form .image-upload .remove-btn {
+  background: none;
+  border: none;
+  color: #ff0000;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.3s; /* เพิ่มเติม */
+}
+
+.event-registration-form .image-upload .remove-btn:hover {
+  color: #cc0000; /* เพิ่มเติม */
+}
+
+.event-registration-form .image-upload p {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: #777;
+}
+
+.event-registration-form textarea.form-control {
+  height: 150px;
+  resize: none;
+}
+
+.event-registration-form .radio-container {
+  margin: 15px ;
+}
+.event-registration-form .radio-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.event-registration-form .submit-btn {
+  display: block;
+  width: 100%;
+  padding: 12px; /* ปรับเป็น 12px */
+  background-color: #28a745;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px; /* ปรับเป็น 18px */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.event-registration-form .submit-btn:hover {
+  background-color: #218838;
+}
