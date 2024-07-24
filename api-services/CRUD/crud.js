@@ -229,15 +229,18 @@ const extractKeys = (obj, keys) => {
         }
 
         let userData;
+        let Docid;
         checkLogin.forEach(doc => {
             userData = doc.data();
+            Docid = doc.id;
         });
         
         const userInfo = {
             "org_name": userData.org_name,
             "org_phone": userData.org_phone,
             "org_address": userData.org_address,
-            "contact_person": userData.contact_person
+            "contact_person": userData.contact_person,
+            "org_id": Docid
         };
         
 
@@ -261,9 +264,9 @@ const extractKeys = (obj, keys) => {
             }
         }
 
-        const orgRef = db.doc(`organizor/${req.query.org_id}`);
+        // const orgRef = db.doc(`organizor/${req.query.org_id}`);
 
-        const response = await db.collection('event').where('org_id', '==', orgRef).get();
+        const response = await db.collection('event').where('org_id', '==', req.query.org_id).get();
 
         if (response.empty) {
             return res.status(404).send('No documents found.');
