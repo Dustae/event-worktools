@@ -1,7 +1,10 @@
 const { use } = require('../Routes/Routes');
-const serviceAccount = require('../key.json');
+// const serviceAccount = require('../key.json');
 const admin = require('firebase-admin');
 const crypto = require('crypto');
+require('dotenv').config();
+
+const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
 
 const multer = require('multer');
 
@@ -92,7 +95,7 @@ const extractKeys = (obj, keys) => {
       }
   
       let searchParticipant;
-      const EventDoc =  (await db.collection('event').where('name','==',event_name).get()).docs[0].ref;
+      const EventDoc =  (await db.collection('event').where('name','==',req.body.event_name).get()).docs[0].ref;
   
       if (req.query.name) {
         searchParticipant = await EventDoc
