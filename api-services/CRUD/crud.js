@@ -261,9 +261,9 @@ const extractKeys = (obj, keys) => {
             }
         }
 
-        const orgRef = db.doc(`organizor/${req.query.org_id}`);
+        // const orgRef = db.doc(`organizor/${req.query.org_id}`);
 
-        const response = await db.collection('event').where('org_id', '==', orgRef).get();
+        const response = await db.collection('event').where('org_id', '==', req.query.org_id).get();
 
         if (response.empty) {
             return res.status(404).send('No documents found.');
