@@ -14,29 +14,42 @@ const EventDetail = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // Fetch event details using event ID
-    const fetchEventDetails = async () => {
-      try {
-        const response = await axios.get(`/v1/api/org/event/${eventId}`);
-        const eventDetails = response.data;
-    
-        // Check if eventDetails exists and has the expected properties
-        if (eventDetails) {
-          setEventName(eventDetails.name || "");
-          setEventDetail(eventDetails.detail || "");
-          setEventLocation(eventDetails.location || "");
-          setProfileImage(eventDetails.profileImage || "");
-          setPrivacy(eventDetails.privacy || "private");
-        } else {
-          console.error('Unexpected event details format:', eventDetails);
-        }
-      } catch (error) {
-        console.error('Error fetching event details', error);
-      }
-    };
+  const loadFromSessionStorage = () => {
+    const storedEvent = sessionStorage.getItem('selectedEvent');
+    if (storedEvent) {
+      const eventDetails = JSON.parse(storedEvent);
+      setEventName(eventDetails.detail || ""); // Adjust based on actual field names
+      setEventDetail(eventDetails.detail || "");
+      setEventLocation(eventDetails.location || "");
+      setProfileImage(eventDetails.bg || "");
+      setPrivacy(eventDetails.event_type || "private");
+    } else {
+      fetchEventDetails(); // Fetch from API if no session storage data
+    }
+  };
 
-    fetchEventDetails();
-  }, [eventId]);
+  const fetchEventDetails = async () => {
+    try {
+      const response = await axios.get(`/v1/api/org/event/${eventId}`);
+      const eventDetails = response.data;
+
+      if (eventDetails) {
+        setEventName(eventDetails.name || "");
+        setEventDetail(eventDetails.detail || "");
+        setEventLocation(eventDetails.location || "");
+        setProfileImage(eventDetails.profileImage || "");
+        setPrivacy(eventDetails.privacy || "private");
+      } else {
+        console.error('Unexpected event details format:', eventDetails);
+      }
+    } catch (error) {
+      console.error('Error fetching event details', error);
+    }
+  };
+
+  loadFromSessionStorage();
+}, [eventId]);
+
 
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {

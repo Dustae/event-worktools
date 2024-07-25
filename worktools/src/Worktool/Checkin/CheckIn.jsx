@@ -17,15 +17,16 @@ const CheckIn = () => {
     const password = event.target.elements.password.value;
 
     try {
-      const response = await axios.post('http://localhost:3000/v1/api/org/login', {
+      const response = await axios.post('https://event-worktools-api.vercel.app/v1/api/org/login', {
         username,
         password
       });
 
       if (response.data.message === "Log in success") {
+        sessionStorage.setItem('org_id', response.data.userInfo.org_id);
         window.location.href = "/home";
       } else {
-        alert("Authentication failed: " + response.data.message);
+        alert("not failed: " + response.data.message);
       }
     } catch (error) {
       console.error('There was an error!', error);

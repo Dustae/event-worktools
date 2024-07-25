@@ -18,7 +18,7 @@ const Register = () => {
     const contact_person = event.target.elements.contactPerson.value; // New field for contact person
 
     try {
-      const response = await axios.post('http://localhost:3000/v1/api/org/register', {
+      const response = await axios.post('https://event-worktools-api.vercel.app/v1/api/org/register', {
         username,
         password,
         org_name,
