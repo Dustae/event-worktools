@@ -4,17 +4,14 @@ import { FaCheck } from 'react-icons/fa';
 import axios from 'axios';
 import './ConfirmBooth.css';
 
-
 const ConfirmBooth = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { result } = location.state || {};
 
   const handleCheckIn = async () => {
-    // Add any check-in logic here, e.g., sending data to an API
     try {
-      // Replace 'https://api.example.com/checkin' with your actual API endpoint
-      await axios.post('https://api.example.com/checkin', result);
+      await axios.post('http://localhost:3000/v1/api/participant/private', result);
       navigate('/successbooth'); // Navigate to the success page after confirming
     } catch (error) {
       console.error('Error checking in:', error);
@@ -23,11 +20,11 @@ const ConfirmBooth = () => {
   };
 
   const handleBack = () => {
-    navigate(-1);
+    navigate(-1); // Navigate back to the previous page
   };
 
   if (!result) {
-    return <div>No data available. Please go back and search again.</div>;
+    return <div className="no-data-message">No data available. Please go back and search again.</div>;
   }
 
   return (
@@ -35,17 +32,17 @@ const ConfirmBooth = () => {
       <div className="checkin-container33">
         <div className="checkin-wrapper33">
           <FaCheck className="checkin-icon33" />
-          <h1>Confirm Details</h1>
-          <p>Please confirm your details:</p>
+          <h1 className="confirm-heading">Confirm Details</h1>
+          <p className="confirm-subheading">Please confirm your details:</p>
           <div className="result-item33">
-            <p>{result.name}</p>
-            <p>{result.phone}</p>
-            <p>{result.email}</p>
+            <p><strong>Name:</strong> {result.name}</p>
+            <p><strong>Phone:</strong> {result.phone}</p>
+            <p><strong>Email:</strong> {result.email}</p>
           </div>
           <button className="checkin-button33" onClick={handleCheckIn}>
             Check-In
           </button>
-          <button className="checkin-button34" onClick={handleBack}>
+          <button className="back-button33" onClick={handleBack}>
             Back
           </button>
         </div>

@@ -45,23 +45,39 @@ const EventAnalytic = () => {
     datasets: [],
   });
 
+  const orgId = 'abc123'; // แทนที่ด้วย ID ขององค์กรจริง
+
   const fetchData = async () => {
     try {
-      const response = await axios.get('your-api-endpoint');
+      const response = await axios.get('your-api-endpoint/v1/api/org/event', {
+        params: {
+          org_id: orgId,
+        },
+      });
       const responseData = response.data;
   
-      // Ensure that responseData has the expected structure
+      // ตรวจสอบว่า responseData มีโครงสร้างที่คาดหวัง
       if (responseData && responseData.labels) {
-        // Proceed with setting the data
-        setBarData(responseData);
+        // ตั้งค่าข้อมูลสำหรับแต่ละกราฟ
+        setPieData({
+          labels: responseData.pie.labels,
+          datasets: responseData.pie.datasets,
+        });
+        setBarData({
+          labels: responseData.bar.labels,
+          datasets: responseData.bar.datasets,
+        });
+        setLineData({
+          labels: responseData.line.labels,
+          datasets: responseData.line.datasets,
+        });
       } else {
-        console.error('Unexpected data format:', responseData);
+        console.error('โครงสร้างข้อมูลไม่คาดหวัง:', responseData);
       }
     } catch (error) {
-      console.error('Error fetching data', error);
+      console.error('ข้อผิดพลาดในการดึงข้อมูล', error);
     }
   };
-  
 
   useEffect(() => {
     fetchData();

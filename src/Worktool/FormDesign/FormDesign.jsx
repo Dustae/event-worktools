@@ -11,6 +11,7 @@ const FormDesign = () => {
   const [showQR, setShowQR] = useState(false);
   const [selectedForm, setSelectedForm] = useState(null);
   const [showMore, setShowMore] = useState(false);
+  const [uploadedData, setUploadedData] = useState([]);
 
   useEffect(() => {
     fetchForms();
@@ -19,7 +20,7 @@ const FormDesign = () => {
 
   const fetchForms = async () => {
     try {
-      const response = await axios.get('/api/forms');
+      const response = await axios.get('/v1/api/org/event');
       if (Array.isArray(response.data)) {
         setForms(response.data);
       } else {
@@ -62,17 +63,69 @@ const FormDesign = () => {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      console.log(data);
-      // Process data and update table state
+      setUploadedData(data); // Store the uploaded data in the state
     };
     reader.readAsBinaryString(file);
   };
 
+  const handleSubmitXLSX = async () => {
+    // Process the uploadedData and send it to the server
+    try {
+      await axios.post('/v1/api/org/uploaded-data', { data: uploadedData });
+      // Optionally update the tableData with the uploaded data
+      setTableData(uploadedData);
+    } catch (error) {
+      console.error('Error submitting uploaded data', error);
+    }
+  };
+
   const handleExportXLSX = () => {
-    const ws = XLSX.utils.json_to_sheet(forms);
+    const ws = XLSX.utils.json_to_sheet(tableData); // Export the current table data
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Forms");
-    XLSX.writeFile(wb, "forms.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, "TableData");
+    XLSX.writeFile(wb, "table_data.xlsx");
+  };
+
+  const handleCreateEvent = async (newEvent) => {
+    try {
+      const response = await axios.post('/v1/api/org/event', newEvent);
+      fetchForms(); // Refresh the forms after creating a new event
+    } catch (error) {
+      console.error('Error creating event', error);
+    }
+  };
+
+  const handleEditEvent = async (editedEvent) => {
+    try {
+      const response = await axios.put('/v1/api/org/event', editedEvent);
+      fetchForms(); // Refresh the forms after editing an event
+    } catch (error) {
+      console.error('Error editing event', error);
+    }
+  };
+
+  const handleUploadPicture = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await axios.post('/v1/api/storage/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      return response.data; // Return the uploaded file data
+    } catch (error) {
+      console.error('Error uploading picture', error);
+    }
+  };
+
+  const handleReadPicture = async (pictureId) => {
+    try {
+      const response = await axios.get(`/v1/api/storage/read?pictureId=${pictureId}`);
+      return response.data; // Return the picture data
+    } catch (error) {
+      console.error('Error reading picture', error);
+    }
   };
 
   return (
@@ -142,13 +195,22 @@ const FormDesign = () => {
           </tbody>
         </table>
         <input type="file" accept=".xlsx, .xls" onChange={handleImportXLSX} />
-        <button className="import-button" onClick={handleExportXLSX}>Export XLSX</button>
+        <div>
+          <button className="submit-button" onClick={handleSubmitXLSX}>Submit</button>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <div>
+          <button className="export-button" onClick={handleExportXLSX}>Export XLSX</button>
+        </div>
       </section>
 
       {showQR && selectedForm && (
         <div className="qr-popup">
           <div className="qr-popup-content">
             <QRCode value={JSON.stringify(selectedForm)} size={256} />
+            <br/>
             <br/>
             <button onClick={handleCloseQR}>Close</button>
           </div>

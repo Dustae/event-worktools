@@ -7,60 +7,87 @@ import './Create.css';
 const Create = () => {
   const [eventName, setEventName] = useState('');
   const [eventLocation, setEventLocation] = useState('');
-  const [eventImage, setEventImage] = useState(null);
+  const [eventBG, setEventBG] = useState(null);
+  const [eventBanner, setEventBanner] = useState(null);
   const [eventDetail, setEventDetail] = useState('');
   const [eventType, setEventType] = useState('Public');
+  const [optionalFields, setOptionalFields] = useState(Array(10).fill(''));
+  const [showOptionalField, setShowOptionalField] = useState(1);
   const navigate = useNavigate();
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = (e, setImage) => {
     const file = e.target.files[0];
-    if (file && file.size <= 2 * 1024 * 1024) { // Check file size <= 2MB
-      setEventImage(file);
+    if (file && file.size <= 2 * 1024 * 1024) { // ตรวจสอบขนาดไฟล์ <= 2MB
+      setImage(file); // อัปเดตภาพเพื่อแสดงผล
     } else {
-      alert('File size should be less than 2MB');
+      alert('ขนาดไฟล์ควรน้อยกว่า 2MB');
     }
   };
 
-  const handleImageRemove = () => {
-    setEventImage(null);
+  const handleImageRemove = (setImage) => {
+    setImage(null);
+  };
+
+  const handleOptionalFieldChange = (index, value) => {
+    const newOptionalFields = [...optionalFields];
+    newOptionalFields[index] = value;
+    setOptionalFields(newOptionalFields);
+    if (index === showOptionalField - 1 && value) {
+      setShowOptionalField(showOptionalField + 1);
+    }
   };
 
   const handleSubmit = async () => {
+    const storedOrgId = sessionStorage.getItem('org_id');
+    const formatOptionalFields = (fields) => fields.map(field => field.trim() === '' ? ' ' : field);
+
     const formData = new FormData();
-    formData.append('eventName', eventName);
-    formData.append('eventLocation', eventLocation);
-    formData.append('eventImage', eventImage);
-    formData.append('eventDetail', eventDetail);
-    formData.append('eventType', eventType);
+    formData.append('name', eventName);
+    formData.append('location', eventLocation);
+    formData.append('detail', eventDetail);
+    formData.append('event_type', eventType);
+    formData.append('org_id', storedOrgId);
+
+    // Append optional fields
+    formatOptionalFields(optionalFields).forEach((field, index) => {
+      formData.append(`option${index + 1}`, field);
+    });
+
+    // Append image files if they exist
+    if (eventBG) {
+      formData.append('bg', eventBG);
+    }
+    if (eventBanner) {
+      formData.append('banner', eventBanner);
+    }
 
     try {
-      const response = await axios.post('your-api-endpoint', formData, {
+      const response = await axios.post('https://event-worktools-api.vercel.app/v1/api/org/event', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       console.log(response.data);
-      // Assuming the response contains the created event ID
-      const eventId = response.data.id;
-      navigate(`/eventdetail/${eventId}`);
+      alert('สร้างเหตุการณ์สำเร็จ');
     } catch (error) {
-      console.error('There was an error creating the event!', error);
+      console.error('เกิดข้อผิดพลาดในการสร้างเหตุการณ์!', error);
+      alert('เกิดข้อผิดพลาดในการสร้างเหตุการณ์');
     }
   };
 
   return (
     <div className="event-registration-form">
-      <h2>Create Event</h2>
+      <h2>สร้างเหตุการณ์</h2>
       <input 
         type="text" 
-        placeholder="Event Name" 
+        placeholder="ชื่อเหตุการณ์" 
         value={eventName} 
         onChange={(e) => setEventName(e.target.value)} 
         className="form-control"
       />
       <input 
         type="text" 
-        placeholder="Event Location" 
+        placeholder="สถานที่จัดงาน" 
         value={eventLocation} 
         onChange={(e) => setEventLocation(e.target.value)}  
         className="form-control"
@@ -68,24 +95,43 @@ const Create = () => {
       <div className="image-upload">
         <label className="file-label">
           <FcAddImage className="icon" />
-          <span>Upload</span>
+          <span>อัปโหลดภาพพื้นหลัง</span>
           <input 
             type="file" 
             accept="image/*" 
-            onChange={handleImageUpload} 
+            onChange={(e) => handleImageUpload(e, setEventBG)} 
             className="form-control-file"
           />
         </label>
-        {eventImage && (
+        {eventBG && (
           <div className="uploaded-file">
-            <span>{eventImage.name}</span>
-            <button onClick={handleImageRemove} className="remove-btn">Remove</button>
+            <span>{eventBG.name}</span>
+            <button onClick={() => handleImageRemove(setEventBG)} className="remove-btn">ลบ</button>
           </div>
         )}
-        <p>Upload Event Headline Image (1200x630 pixels, max 2MB)</p>
+        <p>อัปโหลดภาพพื้นหลังของเหตุการณ์ (ขนาด 1200x630 พิกเซล, สูงสุด 2MB)</p>
+      </div>
+      <div className="image-upload">
+        <label className="file-label">
+          <FcAddImage className="icon" />
+          <span>อัปโหลดแบนเนอร์</span>
+          <input 
+            type="file" 
+            accept="image/*" 
+            onChange={(e) => handleImageUpload(e, setEventBanner)} 
+            className="form-control-file"
+          />
+        </label>
+        {eventBanner && (
+          <div className="uploaded-file">
+            <span>{eventBanner.name}</span>
+            <button onClick={() => handleImageRemove(setEventBanner)} className="remove-btn">ลบ</button>
+          </div>
+        )}
+        <p>อัปโหลดแบนเนอร์ของเหตุการณ์ (ขนาด 1200x630 พิกเซล, สูงสุด 2MB)</p>
       </div>
       <textarea
-        placeholder="Event Detail"
+        placeholder="รายละเอียดเหตุการณ์"
         value={eventDetail}
         onChange={(e) => setEventDetail(e.target.value)}
         className="form-control"
@@ -98,7 +144,7 @@ const Create = () => {
             checked={eventType === 'Private'}
             onChange={() => setEventType('Private')}
           />
-          Private
+          ส่วนตัว
         </label>
         <label>
           <input
@@ -107,10 +153,21 @@ const Create = () => {
             checked={eventType === 'Public'}
             onChange={() => setEventType('Public')}
           />
-          Public
+          สาธารณะ
         </label>
       </div>
-      <button onClick={handleSubmit} className="submit-btn">Submit</button>
+      {Array.from({ length: 10 }, (_, index) => (
+        index < showOptionalField && (
+          <textarea
+            key={index}
+            placeholder={`เพิ่มฟิลด์เสริม ${index + 1}`}
+            value={optionalFields[index]}
+            onChange={(e) => handleOptionalFieldChange(index, e.target.value)}
+            className="form-control"
+          ></textarea>
+        )
+      ))}
+      <button onClick={handleSubmit} className="submit-btn">ส่ง</button>
     </div>
   );
 };

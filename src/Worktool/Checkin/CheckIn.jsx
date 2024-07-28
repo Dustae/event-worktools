@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import './CheckIn.css';
@@ -7,27 +7,32 @@ import { IoMdArrowBack } from "react-icons/io";
 import { FaUserTie } from "react-icons/fa";
 
 const CheckIn = () => {
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     const username = event.target.elements.username.value;
     const password = event.target.elements.password.value;
 
     try {
-      const response = await axios.post('YOUR_API_ENDPOINT', {
+      const response = await axios.post('https://event-worktools-api.vercel.app/v1/api/org/login', {
         username,
         password
       });
 
-      if (response.data.isAuthenticated) {
+      if (response.data.message === "Log in success") {
+        sessionStorage.setItem('org_id', response.data.userInfo.org_id);
         window.location.href = "/home";
       } else {
-        alert("Authentication failed!");
+        alert("not failed: " + response.data.message);
       }
     } catch (error) {
       console.error('There was an error!', error);
-      alert("Authentication failed!");
+      alert("Authentication failed: " + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,7 +55,9 @@ const CheckIn = () => {
             <input type="password" name="password" placeholder="Password" required />
             <FaLock className="icon78" />
           </div>
-          <button type="submit">Login</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
           <div className="register-link78">
             <p>Don't have an account? <Link to="/register">Register</Link></p>
           </div>

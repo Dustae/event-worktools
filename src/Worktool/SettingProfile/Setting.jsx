@@ -28,6 +28,7 @@ const Setting = () => {
       });
       console.log('Login credentials saved', response.data);
       // Handle success, e.g., show a success message or redirect
+      // Example: navigate('/success'); // Redirect to a success page
     } catch (error) {
       console.error('Error updating login credentials', error);
       // Handle error, e.g., show an error message
@@ -39,6 +40,7 @@ const Setting = () => {
       const response = await axios.post('/api/update-user-info', userInfo);
       console.log('User information saved', response.data);
       // Handle success, e.g., show a success message or redirect
+      // Example: navigate('/profile'); // Redirect to a profile page
     } catch (error) {
       console.error('Error updating user information', error);
       // Handle error, e.g., show an error message

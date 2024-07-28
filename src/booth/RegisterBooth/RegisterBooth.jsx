@@ -26,8 +26,16 @@ const RegisterBooth = () => {
     event.preventDefault();
     setShowPopup(true); // Show the popup icon
 
+    const requestData = {
+      event_name: 'Event testetstetste', // Replace with the actual event name
+      name: formData.firstName,
+      surname: formData.lastName,
+      email: formData.email,
+      phone: formData.phoneNumber
+    };
+
     try {
-      const response = await axios.post('https://api.example.com/register', formData);
+      const response = await axios.post('http://localhost:3000/v1/api/participant/public', requestData);
       console.log(response.data);
     } catch (error) {
       console.error('Error registering user:', error);
@@ -44,7 +52,7 @@ const RegisterBooth = () => {
       <div className="wrapper11">
         <FaUser className="icon11" />
         <form onSubmit={handleRegister}>
-          <h1>RegisterUser</h1>
+          <h1>Register User</h1>
           <div className="input-box11">
             <input type="text" placeholder="First Name" name="firstName" value={formData.firstName} onChange={handleChange} required />
           </div>

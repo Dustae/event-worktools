@@ -10,10 +10,15 @@ const DataTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 100;
   const tableRef = useRef();
+  const orgId = 'abc123'; // Replace this with the actual org_id
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('your-api-endpoint');
+      const response = await axios.get('your-api-endpoint/v1/api/org/event', {
+        params: {
+          org_id: orgId
+        }
+      });
       const responseData = response.data;
 
       // Ensure responseData is an array
@@ -53,19 +58,19 @@ const DataTable = () => {
         <table className="data-table" id="table-to-export">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Surname</th>
-              <th>Email</th>
-              <th>Phone</th>
+              <th>Event ID</th>
+              <th>Detail</th>
+              <th>Event Type</th>
+              <th>Location</th>
             </tr>
           </thead>
           <tbody>
             {currentData.map((row, index) => (
               <tr key={index}>
-                <td>{row.name}</td>
-                <td>{row.surname}</td>
-                <td>{row.email}</td>
-                <td>{row.phone}</td>
+                <td>{row.event_id}</td>
+                <td>{row.detail}</td>
+                <td>{row.event_type}</td>
+                <td>{row.location}</td>
               </tr>
             ))}
           </tbody>

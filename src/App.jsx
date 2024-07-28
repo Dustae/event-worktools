@@ -38,7 +38,7 @@ import SuccessRegister from './booth/SuccesBooth/SuccessRegister';
 
 const App = () => {
   const location = useLocation();
-  const showNavbar = !['/registerbooth', '/loginbooth', '/confirmbooth', '/successbooth', '/checkin', '/register', '/home', '/home/create', '/eventanalytic' , '/eventdetail' , '/datatable' , '/formdesign' , '/pagecreate', '/dashboard', '/summary', '/PageForm', '/setting', '/pagesetting','*'].includes(location.pathname);
+  const showNavbar = !['/registerbooth', '/loginbooth', '/confirmbooth', '/successbooth', '/checkin', '/register', '/home', '/homecreate', '/eventanalytic' , '/eventdetail' , '/datatable' , '/formdesign' , '/pagecreate', '/dashboard', '/summary', '/PageForm', '/setting', '/pagesetting','*'].includes(location.pathname);
 
   return (
     <>
@@ -59,7 +59,7 @@ const App = () => {
         
         <Route element={<WorktoolLayout/>}>
         <Route path="/home" element={<Home />} />
-        <Route path="/home/create" element={<Create />} />
+        <Route path="/homecreate" element={<Create />} />
         <Route path="/eventanalytic" element={<EventAnalytic />} />
         <Route path="/eventdetail" element={<EventDetail />} />
         <Route path="/datatable" element={<DataTable />} />

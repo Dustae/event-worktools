@@ -30,7 +30,7 @@ const Summary = () => {
 
   const fetchLineData = async () => {
     try {
-      const response = await axios.get('/api/line-data'); // Adjust endpoint
+      const response = await axios.get('/v1/api/org/event'); // Adjust endpoint
       const data = response.data;
 
       // Ensure the response has the expected structure
@@ -46,7 +46,7 @@ const Summary = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('/api/tasks'); // Adjust endpoint
+      const response = await axios.get('/v1/api/org/event'); // Adjust endpoint
       const data = response.data;
 
       // Ensure the response is an array
@@ -64,7 +64,7 @@ const Summary = () => {
     if (task.trim() !== '') {
       const newTask = { title: task, date: startDate };
       try {
-        const response = await axios.post('/api/tasks', newTask); // Adjust endpoint
+        const response = await axios.post('/v1/api/org/event', newTask); // Adjust endpoint
         const data = response.data;
 
         // Ensure the response is either an array or a single task object
