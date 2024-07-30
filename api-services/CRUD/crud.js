@@ -229,15 +229,18 @@ const extractKeys = (obj, keys) => {
         }
 
         let userData;
+        let Docid;
         checkLogin.forEach(doc => {
             userData = doc.data();
+            Docid = doc.id;
         });
         
         const userInfo = {
             "org_name": userData.org_name,
             "org_phone": userData.org_phone,
             "org_address": userData.org_address,
-            "contact_person": userData.contact_person
+            "contact_person": userData.contact_person,
+            "org_id": Docid
         };
         
 
@@ -505,5 +508,45 @@ const extractKeys = (obj, keys) => {
     } catch (error) {
       console.error('Error reading file', error);
       res.status(500).send({ error: error.message });
+    }
+  };
+
+  exports.event_info = async (req, res) => {
+    try {
+      const requiredFields = ['event_name'];
+  
+      for (const field of requiredFields) {
+        if (!req.query[field]) {
+          return res.status(400).json({
+            message: `Missing required field: ${field}`
+          });
+        }
+      }
+  
+      event_info = await db.collection('event').where('name', '==', req.query.event_name).get();
+  
+      if (event_info.empty) {
+        return res.status(404).json({
+          message: "event information not found"
+        });
+      }
+  
+      let eventData = [];
+      event_info.forEach(doc => {
+        eventData.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+  
+      res.status(200).json({
+        message: 'get event success',
+        eventData
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: 'Cannot access event detail',
+        err_note: error.message
+      });
     }
   };

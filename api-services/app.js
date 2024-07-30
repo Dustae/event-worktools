@@ -4,8 +4,10 @@ const { swaggerUi , swaggerSpec } = require('./swaggerDoc');
 const { route } = require('./Routes/Routes');
 const router = require('./Routes/Routes');
 const app = express()
+const core = require('cors');
 require('./Routes/Routes');
 
+app.use(core());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
