@@ -4,7 +4,7 @@ const router = express.Router()
 const { create_event , allevent , 
         login , register , get_private_list ,
          checkin_public , update_private , edit_event ,
-         addpicture , readfile } = require('../CRUD/crud')
+         addpicture , readfile , event_info } = require('../CRUD/crud')
 
 const multer = require('multer');
 
@@ -587,6 +587,7 @@ router.post('/org/login', login)
  *                   description: Error details.
  */
 router.get('/org/event', allevent)
+
 /**
  * Create a new event for an organization.
  * @swagger
@@ -905,6 +906,129 @@ router.post('/storage/upload', upload.single('file'), addpicture);
  *         description: Internal server error.
  */
 router.get('/storage/read', readfile);
+
+/**
+ * @swagger
+ * /v1/api/org/single_event:
+ *   get:
+ *     summary: Retrieve event information
+ *     description: Fetches details of a single event based on the event name.
+ *     tags:
+ *       - Events
+ *     parameters:
+ *       - in: query
+ *         name: event_name
+ *         required: true
+ *         description: The name of the event to retrieve information for.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved events.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   event_id:
+ *                     type: string
+ *                     description: ID of the event.
+ *                     example: "def456"
+ *                   detail:
+ *                     type: string
+ *                     description: Details of the event.
+ *                     example: "Annual Conference"
+ *                   event_type:
+ *                     type: string
+ *                     description: Type of the event.
+ *                     example: "Conference"
+ *                   location:
+ *                     type: string
+ *                     description: Location of the event.
+ *                     example: "New York, USA"
+ *                   bg:
+ *                     type: null
+ *                     description: Background option for the event (currently null).
+ *                   banner:
+ *                     type: null
+ *                     description: Banner option for the event (currently null).
+ *                   option1:
+ *                     type: string
+ *                     description: Optional data field 1 for the event.
+ *                     example: "Option 1"
+ *                   option2:
+ *                     type: string
+ *                     description: Optional data field 2 for the event.
+ *                     example: "Option 2"
+ *                   option3:
+ *                     type: string
+ *                     description: Optional data field 3 for the event.
+ *                     example: "Option 3"
+ *                   option4:
+ *                     type: string
+ *                     description: Optional data field 4 for the event.
+ *                     example: "Option 4"
+ *                   option5:
+ *                     type: string
+ *                     description: Optional data field 5 for the event.
+ *                     example: "Option 5"
+ *                   option6:
+ *                     type: string
+ *                     description: Optional data field 6 for the event.
+ *                     example: "Option 6"
+ *                   option7:
+ *                     type: string
+ *                     description: Optional data field 7 for the event.
+ *                     example: "Option 7"
+ *                   option8:
+ *                     type: string
+ *                     description: Optional data field 8 for the event.
+ *                     example: "Option 8"
+ *                   option9:
+ *                     type: string
+ *                     description: Optional data field 9 for the event.
+ *                     example: "Option 9"
+ *                   option10:
+ *                     type: string
+ *                     description:
+ *                     example: "Option 10"
+ *       400:
+ *         description: Missing required field
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Missing required field: event_name"
+ *       404:
+ *         description: Event information not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: event information not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Cannot access event detail
+ *                 err_note:
+ *                   type: string
+ *                   example: Detailed error message
+ */
+router.get('/org/single_event', event_info);
 
 
 router.use((err, req, res, next) => {

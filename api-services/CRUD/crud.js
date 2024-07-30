@@ -510,3 +510,43 @@ const extractKeys = (obj, keys) => {
       res.status(500).send({ error: error.message });
     }
   };
+
+  exports.event_info = async (req, res) => {
+    try {
+      const requiredFields = ['event_name'];
+  
+      for (const field of requiredFields) {
+        if (!req.query[field]) {
+          return res.status(400).json({
+            message: `Missing required field: ${field}`
+          });
+        }
+      }
+  
+      event_info = await db.collection('event').where('name', '==', req.query.event_name).get();
+  
+      if (event_info.empty) {
+        return res.status(404).json({
+          message: "event information not found"
+        });
+      }
+  
+      let eventData = [];
+      event_info.forEach(doc => {
+        eventData.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+  
+      res.status(200).json({
+        message: 'get event success',
+        eventData
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: 'Cannot access event detail',
+        err_note: error.message
+      });
+    }
+  };
