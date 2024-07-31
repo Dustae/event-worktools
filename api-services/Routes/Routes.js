@@ -899,7 +899,7 @@ router.post('/storage/upload', upload.single('file'), addpicture);
  *         content:
  *           text/plain:
  *             schema:
- *               type: string
+ *               type: url
  *       404:
  *         description: File not found.
  *       500:
