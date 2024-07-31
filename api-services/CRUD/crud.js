@@ -95,7 +95,7 @@ const extractKeys = (obj, keys) => {
       }
   
       let searchParticipant;
-      const EventDoc =  (await db.collection('event').where('name','==',req.body.event_name).get()).docs[0].ref;
+      const EventDoc =  (await db.collection('event').where('name','==',req.query.event_name).get()).docs[0].ref;
   
       if (req.query.name) {
         searchParticipant = await EventDoc
@@ -126,7 +126,7 @@ const extractKeys = (obj, keys) => {
       });
   
       res.status(200).json({
-        message: 'Create event success',
+        message: 'Get infomation success',
         participantData
       });
     } catch (error) {
