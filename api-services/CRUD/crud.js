@@ -152,7 +152,7 @@ const extractKeys = (obj, keys) => {
         }
       }
 
-      const EventDoc =  (await db.collection('event').where('name','==',event_name).get()).docs[0].ref;
+      const EventDoc =  (await db.collection('event').where('name','==',req.body.event_name).get()).docs[0].ref;
 
       const updateStatus = EventDoc
                               .collection('participant').doc(req.body.id).update({status: 'checked-in'})
