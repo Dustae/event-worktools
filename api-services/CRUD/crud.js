@@ -502,9 +502,10 @@ const extractKeys = (obj, keys) => {
         return res.status(404).send('File not found');
       }
   
+    await file.makePublic();
+    const url = file.publicUrl();
       
-      const [fileBuffer] = await file.download();
-      res.status(200).send(fileBuffer.toString('base64'));
+      res.status(200).send( url );
     } catch (error) {
       console.error('Error reading file', error);
       res.status(500).send({ error: error.message });
