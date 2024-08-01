@@ -4,6 +4,9 @@
   align-items: center;
   height: 100vh;
   background: linear-gradient(135deg, #e0f2e9, #d0e6d1);
+  background-size: cover; /* Ensure background covers the full area */
+  background-position: center; /* Center the background image */
+  background-image: url(''); /* Default background image */
 }
 
 .checkin-container22 {
@@ -151,4 +154,38 @@
 .register-link22 p a:hover {
   text-decoration: underline;
   color: rgb(72, 14, 220);
+}
+
+.event-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.event-banner {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.bannerImage {
+  width: 100%;
+  height: auto;
+  max-height: 200px; /* Adjust height as needed */
+  object-fit: cover; /* Ensure the image covers the area */
+  margin-bottom: 20px; /* Space between banner and form */
+}
+
+.results-span {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.results-span span {
+  display: block;
 }
