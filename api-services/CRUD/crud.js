@@ -286,7 +286,7 @@ const extractKeys = (obj, keys) => {
             detail: event.detail,
             event_type: event.event_type,
             location: event.location,
-            nmae: event.name,
+            name: event.name,
             bg: event.bg ? event.bg : null,
             banner: event.banner ? event.banner : null,
             option1: event.option1,
