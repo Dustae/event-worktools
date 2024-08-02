@@ -95,7 +95,7 @@ const extractKeys = (obj, keys) => {
       }
   
       let searchParticipant;
-      const EventDoc =  (await db.collection('event').where('name','==',req.body.event_name).get()).docs[0].ref;
+      const EventDoc =  (await db.collection('event').where('name','==',req.query.event_name).get()).docs[0].ref;
   
       if (req.query.name) {
         searchParticipant = await EventDoc
@@ -126,7 +126,7 @@ const extractKeys = (obj, keys) => {
       });
   
       res.status(200).json({
-        message: 'Create event success',
+        message: 'Get infomation success',
         participantData
       });
     } catch (error) {
@@ -152,7 +152,7 @@ const extractKeys = (obj, keys) => {
         }
       }
 
-      const EventDoc =  (await db.collection('event').where('name','==',event_name).get()).docs[0].ref;
+      const EventDoc =  (await db.collection('event').where('name','==',req.body.event_name).get()).docs[0].ref;
 
       const updateStatus = EventDoc
                               .collection('participant').doc(req.body.id).update({status: 'checked-in'})
@@ -286,8 +286,9 @@ const extractKeys = (obj, keys) => {
             detail: event.detail,
             event_type: event.event_type,
             location: event.location,
-            bg: event.bg ? null : null,
-            banner: event.banner ? null : null,
+            name: event.name,
+            bg: event.bg ? event.bg : null,
+            banner: event.banner ? event.banner : null,
             option1: event.option1,
             option2: event.option2,
             option3: event.option3,
