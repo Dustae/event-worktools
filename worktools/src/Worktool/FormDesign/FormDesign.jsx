@@ -68,7 +68,7 @@ const FormDesign = () => {
 
   const handleGenerateQR = () => {
     if (selectedEvent && selectedEvent.name) {
-      const link = `http://localhost:5173/event?event_name=${selectedEvent.name}`;
+      const link = `https://event-worktools-nu.vercel.app//event?event_name=${selectedEvent.name}`;
       setEventLink(link);
       setQrCode(link);
     }
