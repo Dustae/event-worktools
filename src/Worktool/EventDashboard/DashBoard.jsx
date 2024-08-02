@@ -16,6 +16,7 @@ const DashBoard = () => {
   const [eventAnalyticData, setEventAnalyticData] = useState(null);
   const [eventDetailData, setEventDetailData] = useState(null);
   const [dataTableData, setDataTableData] = useState(null);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
     fetchEvents();
@@ -34,8 +35,10 @@ const DashBoard = () => {
         fetchEventDetail(mainEvent.event_id);
         fetchDataTable(mainEvent.event_id);
       }
+      setLoading(false); // Set loading to false after fetching
     } catch (error) {
       console.error('Error fetching events', error);
+      setLoading(false); // Set loading to false in case of error
     }
   };
 
@@ -66,20 +69,18 @@ const DashBoard = () => {
     }
   };
 
-  const handleEventChange = (eventId) => {
-    const event = events.find(e => e.event_id === eventId);
-    if (event) {
-      setSelectedEvent(event);
-      fetchEventAnalytic(eventId);
-      fetchEventDetail(eventId);
-      fetchDataTable(eventId);
-  
-      // Update sessionStorage with new event details
-      sessionStorage.setItem('selectedEvent', JSON.stringify(event));
-    }
+  const handleEventChange = (event) => {
+    const eventId = event.target.value;
+    console.log('Selected Event ID:', eventId);
+    setSelectedEvent(eventId);
+    fetchEventAnalytic(eventId);
+    fetchEventDetail(eventId);
+    fetchDataTable(eventId);
+
+    // Update sessionStorage with new event details
+    const selectedEvent = events.find(e => e.event_id === eventId);
+    sessionStorage.setItem('selectedEvent', JSON.stringify(selectedEvent));
   };
-  
-  
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -158,22 +159,23 @@ const DashBoard = () => {
             Refresh Events
           </button>
           <div className="mb-3">
-            <select className="form-select" onChange={(e) => handleEventChange(e.target.value)} value={selectedEvent ? selectedEvent.event_id : ''}>
-              {events.map(event => (
-                <option key={event.event_id} value={event.event_id}>
-                  {event.detail}
-                </option>
-              ))}
-            </select>
+          <select className="form-select" onChange={handleEventChange} value={selectedEvent}>
+          {events.map(event => (
+            <option key={event.event_id} value={event.event_id}>
+              {event.name} 
+            </option>
+          ))}
+        </select>
           </div>
+         
           <div id="event-analytic">
-            <EventAnalytic data={eventAnalyticData} />
+            {loading ? <p>Loading Event Analytic...</p> : <EventAnalytic data={eventAnalyticData} />}
           </div>
           <div id="event-detail">
-            <EventDetail data={eventDetailData} />
+            {loading ? <p>Loading Event Detail...</p> : <EventDetail data={eventDetailData} />}
           </div>
           <div id="data-table">
-            <DataTable data={dataTableData} />
+            {loading ? <p>Loading Data Table...</p> : <DataTable data={dataTableData} />}
           </div>
         </div>
         <main className="content px-3 py-2"></main>

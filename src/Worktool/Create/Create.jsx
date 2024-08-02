@@ -140,18 +140,18 @@ const Create = () => {
         <label>
           <input
             type="radio"
-            value="Private"
-            checked={eventType === 'Private'}
-            onChange={() => setEventType('Private')}
+            value="private"
+            checked={eventType === 'private'}
+            onChange={() => setEventType('private')}
           />
           ส่วนตัว
         </label>
         <label>
           <input
             type="radio"
-            value="Public"
-            checked={eventType === 'Public'}
-            onChange={() => setEventType('Public')}
+            value="public"
+            checked={eventType === 'public'}
+            onChange={() => setEventType('public')}
           />
           สาธารณะ
         </label>

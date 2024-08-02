@@ -10,9 +10,6 @@ const SuccessBooth = () => {
         <FaCheck className="success-icon" />
         <h1 className='text44'>Check-In Success</h1>
         <p className='text45'>Congratulations! Your check-in was successful.</p>
-        <Link to="/" className="back-button">
-          Back
-        </Link>
       </div>
     </div>
   );

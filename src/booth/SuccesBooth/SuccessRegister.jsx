@@ -10,9 +10,6 @@ const SuccessRegister = () => {
         <FaCheck className="success-icon1122" />
         <h1 className='text1122'>Check-In Success</h1>
         <p className='text1122'>Congratulations! Your check-in was successful.</p>
-        <Link to="/" className="back-button1122">
-          Back
-        </Link>
       </div>
     </div>
   );

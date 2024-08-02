@@ -1,9 +1,14 @@
 .body11 {
   display: flex;
+  flex-direction: column; /* Ensure content is stacked vertically */
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(135deg, #e0f2e9, #d0e6d1);
+  background-size: cover; /* Ensure background covers the full area */
+  background-position: center; /* Center the background image */
+  background-image: url(''); /* Default background image */
+  /* Add any other styles you need */
 }
 
 .wrapper11 {
@@ -106,7 +111,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: #fff;
-  padding: 20px 40px;
+  padding: 60px 80px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -122,7 +127,7 @@
 
 .popup11 p {
   margin-top: 5px;
-  font-size: 18px;
+  font-size: 22px;
   color: #333;
 }
 
@@ -162,4 +167,28 @@
   .wrapper11 button {
     height: 35px;
   }
+}
+
+.event-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.event-banner {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.bannerImage {
+  width: 100%;
+  height: auto;
+  max-height: 200px; /* Adjust height as needed */
+  object-fit: cover; /* Ensure the image covers the area */
+  margin-bottom: 20px; /* Space between banner and form */
 }

@@ -34,11 +34,27 @@ import PageForm from './Worktool/FormDesign/PageForm';
 import Setting from './Worktool/SettingProfile/Setting';
 import PageSetting from './Worktool/SettingProfile/PageSetting';
 import SuccessRegister from './booth/SuccesBooth/SuccessRegister';
-
+import EventBooth from './booth/eventBooth/EventBooth';
 
 const App = () => {
   const location = useLocation();
-  const showNavbar = !['/registerbooth', '/loginbooth', '/confirmbooth', '/successbooth', '/checkin', '/register', '/home', '/homecreate', '/eventanalytic' , '/eventdetail' , '/datatable' , '/formdesign' , '/pagecreate', '/dashboard', '/summary', '/PageForm', '/setting', '/pagesetting','*'].includes(location.pathname);
+
+  const knownPaths = [
+    '/',
+    '/checkin',
+    '/register',
+    '/about',
+    '/promo',
+    '/team',
+    '/statistics',
+    '/work',
+    '/skill',
+    '/pricing',
+    '/contact',
+    '/footer',
+  ];
+
+  const showNavbar = knownPaths.includes(location.pathname);
 
   return (
     <>
@@ -57,29 +73,31 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/footer" element={<Footer />} />
         
-        <Route element={<WorktoolLayout/>}>
-        <Route path="/home" element={<Home />} />
-        <Route path="/homecreate" element={<Create />} />
-        <Route path="/eventanalytic" element={<EventAnalytic />} />
-        <Route path="/eventdetail" element={<EventDetail />} />
-        <Route path="/datatable" element={<DataTable />} />
-        <Route path="/formdesign" element={<FormDesign />} />
-        <Route path="/pagecreate" element={<PageCreate />} />
-        <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/summary" element={<Summary />} />
-        <Route path="/pageform" element={<PageForm />} />
-        <Route path="/setting" element={<Setting />} />
-        <Route path="/pagesetting" element={<PageSetting />} />
+        <Route element={<WorktoolLayout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/homecreate" element={<Create />} />
+          <Route path="/eventanalytic" element={<EventAnalytic />} />
+          <Route path="/eventdetail" element={<EventDetail />} />
+          <Route path="/datatable" element={<DataTable />} />
+          <Route path="/formdesign" element={<FormDesign />} />
+          <Route path="/pagecreate" element={<PageCreate />} />
+          <Route path="/dashboard" element={<DashBoard />} />
+          <Route path="/summary" element={<Summary />} />
+          <Route path="/pageform" element={<PageForm />} />
+          <Route path="/setting" element={<Setting />} />
+          <Route path="/pagesetting" element={<PageSetting />} />
         </Route>
  
         {/* Customer routes */}
         <Route element={<CustomerLayout />}>
+          <Route path="/event" element={<EventBooth />} />
           <Route path="/registerbooth" element={<RegisterBooth />} />
           <Route path="/loginbooth" element={<LoginBooth />} />
           <Route path="/confirmbooth" element={<ConfirmBooth />} />
           <Route path="/successbooth" element={<SuccessBooth />} />
-          <Route path="/registersuccess" element={<SuccessRegister/>} />
+          <Route path="/registersuccess" element={<SuccessRegister />} />
         </Route>
+        
         {/* Page not found route */}
         <Route path="*" element={<Page404 />} />
       </Routes>
@@ -87,4 +105,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default App

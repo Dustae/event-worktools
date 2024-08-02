@@ -1,26 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useRef } from 'react';
 import axios from 'axios';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import './FormDesign.css';
-import { FaEllipsisH } from 'react-icons/fa';
+import '../EventDashboard/DashBoard.css';
+import { FaEllipsisH, FaCheck } from 'react-icons/fa';
 import QRCode from 'qrcode.react';
 import * as XLSX from 'xlsx';
 
 const FormDesign = () => {
   const [forms, setForms] = useState([]);
-  const [tableData, setTableData] = useState([]); // State for table data
+  const [tableData, setTableData] = useState([]);
   const [showQR, setShowQR] = useState(false);
   const [selectedForm, setSelectedForm] = useState(null);
   const [showMore, setShowMore] = useState(false);
   const [uploadedData, setUploadedData] = useState([]);
+  const [eventName, setEventName] = useState('');
+  const [bgImage, setBgImage] = useState(null);
+  const [bannerImage, setBannerImage] = useState(null);
+  const [eventLink, setEventLink] = useState('');
+  const [qrCode, setQrCode] = useState('');
+  const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showPopup, setShowPopup] = useState(false);
+  const rowsPerPage = 10;
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchForms();
     fetchTableData();
+    fetchEvents();
   }, []);
+
+  useEffect(() => {
+    if (selectedEvent) {
+      handleGenerateQR();
+    }
+  }, [selectedEvent]);
 
   const fetchForms = async () => {
     try {
-      const response = await axios.get('/v1/api/org/event');
+      const orgId = sessionStorage.getItem('org_id') || 'null';
+      const response = await axios.get(`https://event-worktools-api.vercel.app/v1/api/org/event`, { params: { org_id: orgId } });
       if (Array.isArray(response.data)) {
         setForms(response.data);
       } else {
@@ -44,14 +66,57 @@ const FormDesign = () => {
     }
   };
 
-  const handleGenerateQR = (form) => {
-    setSelectedForm(form);
-    setShowQR(true);
+  const handleGenerateQR = () => {
+    if (selectedEvent && selectedEvent.name) {
+      const link = `https://event-worktools-nu.vercel.app/event?event_name=${selectedEvent.name}`;
+      setEventLink(link);
+      setQrCode(link);
+    }
   };
 
-  const handleCloseQR = () => {
-    setShowQR(false);
-    setSelectedForm(null);
+  const handleExportXLSX = () => {
+    const ws = XLSX.utils.json_to_sheet(tableData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "TableData");
+    XLSX.writeFile(wb, "table_data.xlsx");
+  };
+
+
+  const fetchEvents = async () => {
+    const orgId = sessionStorage.getItem('org_id') || 'abc123'; // default org_id if not in sessionStorage
+    try {
+      const response = await axios.get(`https://event-worktools-api.vercel.app/v1/api/org/event`, { params: { org_id: orgId } });
+      const fetchedEvents = response.data;
+      setEvents(fetchedEvents);
+      if (fetchedEvents.length > 0) {
+        const mainEvent = fetchedEvents[0];
+        setSelectedEvent(mainEvent);
+        sessionStorage.setItem('selectedEvent', JSON.stringify(mainEvent));
+      }
+    } catch (error) {
+      console.error('Error fetching events', error);
+    }
+  };
+
+  const handleEventChange = (event) => {
+    const eventId = event.target.value;
+    const selectedEvent = events.find(e => e.event_id === eventId);
+    setSelectedEvent(selectedEvent);
+    sessionStorage.setItem('selectedEvent', JSON.stringify(selectedEvent));
+  };
+
+  const handleDeleteData = () => {
+    setUploadedData([]);
+    setTableData([]);
+    
+    // Clear the file input value
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   const handleImportXLSX = (e) => {
@@ -63,159 +128,150 @@ const FormDesign = () => {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      setUploadedData(data); // Store the uploaded data in the state
+  
+      // Get headers
+      const headers = data[0].map(header => header.toLowerCase().replace(/ /g, '_'));
+  
+      // Filter out "event_name" column index
+      const eventIndex = headers.indexOf('event_name');
+      const filteredHeaders = headers.filter(header => header !== 'event_name');
+  
+      // Function to convert Excel date to JavaScript date
+      const excelDateToJSDate = (serial) => {
+        const utc_days = Math.floor(serial - 25569);
+        const utc_value = utc_days * 86400;
+        return new Date(utc_value * 1000);
+      };
+  
+      // Filter data rows
+      const filteredData = data.slice(1).map(row => {
+        const filteredRow = { event_name: selectedEvent.name }; // Add event_name from selectedEvent
+        row.forEach((cell, index) => {
+          if (index !== eventIndex) {
+            const header = filteredHeaders[index > eventIndex ? index - 1 : index];
+            // Check if the cell is a number and possibly an Excel date
+            if (typeof cell === 'number' && cell > 25569) {
+              const date = excelDateToJSDate(cell);
+              filteredRow[header] = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            } else {
+              filteredRow[header] = cell;
+            }
+          }
+        });
+        return filteredRow;
+      });
+  
+      setUploadedData(filteredData);
+      setTableData(filteredData);
+      setCurrentPage(1);
     };
     reader.readAsBinaryString(file);
   };
+  
+  
 
   const handleSubmitXLSX = async () => {
-    // Process the uploadedData and send it to the server
-    try {
-      await axios.post('/v1/api/org/uploaded-data', { data: uploadedData });
-      // Optionally update the tableData with the uploaded data
-      setTableData(uploadedData);
-    } catch (error) {
-      console.error('Error submitting uploaded data', error);
+    for (const row of uploadedData) {
+      const rowDataWithEventName = { ...row, event_name: selectedEvent.name };
+      try {
+        await axios.post('https://event-worktools-api.vercel.app/v1/api/participant/public', rowDataWithEventName);
+        setShowPopup(true);
+        
+      } catch (error) {
+        console.error('Error submitting uploaded data', error);
+      }
+
+      setTimeout(() => {
+        setShowPopup(false); 
+        handleDeleteData();
+      }, 10000);
     }
   };
+  
 
-  const handleExportXLSX = () => {
-    const ws = XLSX.utils.json_to_sheet(tableData); // Export the current table data
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "TableData");
-    XLSX.writeFile(wb, "table_data.xlsx");
-  };
-
-  const handleCreateEvent = async (newEvent) => {
-    try {
-      const response = await axios.post('/v1/api/org/event', newEvent);
-      fetchForms(); // Refresh the forms after creating a new event
-    } catch (error) {
-      console.error('Error creating event', error);
-    }
-  };
-
-  const handleEditEvent = async (editedEvent) => {
-    try {
-      const response = await axios.put('/v1/api/org/event', editedEvent);
-      fetchForms(); // Refresh the forms after editing an event
-    } catch (error) {
-      console.error('Error editing event', error);
-    }
-  };
-
-  const handleUploadPicture = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    try {
-      const response = await axios.post('/v1/api/storage/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      return response.data; // Return the uploaded file data
-    } catch (error) {
-      console.error('Error uploading picture', error);
-    }
-  };
-
-  const handleReadPicture = async (pictureId) => {
-    try {
-      const response = await axios.get(`/v1/api/storage/read?pictureId=${pictureId}`);
-      return response.data; // Return the picture data
-    } catch (error) {
-      console.error('Error reading picture', error);
-    }
-  };
+  const displayData = tableData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
   return (
     <div className="form-design">
-      <section className="create-new-form">
-        <h2>Create new form</h2>
-        <div className="form-icons">
-          {forms.slice(0, 3).map((form, index) => (
-            <div key={index} className="form-icon" onClick={() => handleGenerateQR(form)}>
-              <img src={form.image} alt="Form" />
-              <p>{form.title}</p>
-            </div>
+      <button className="btn btn-primary mb-3" onClick={fetchEvents}>
+        Refresh Events
+      </button>
+      <div className="mb-3">
+        <select className="form-select" onChange={handleEventChange} value={selectedEvent?.event_id || ''}>
+          {events.map(event => (
+            <option key={event.event_id} value={event.event_id}>
+              {event.name} 
+            </option>
           ))}
-          {forms.length > 3 && (
-            <div className="form-icon" onClick={() => setShowMore(!showMore)}>
-              <FaEllipsisH size={80} />
-              <p>More Forms</p>
-            </div>
-          )}
-        </div>
-        {showMore && (
-          <div className="more-forms">
-            {forms.slice(3).map((form, index) => (
-              <div key={index + 3} className="form-icon" onClick={() => handleGenerateQR(form)}>
-                <img src={form.image} alt="Form" />
-                <p>{form.title}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+        </select>
+      </div>
 
-      <section className="your-current-form">
-        <h2>Your current form for this event</h2>
-        {forms.length > 0 && (
-          <div className="current-form-content">
-            <img src={forms[forms.length - 1].image} alt="Current Form" className="small-image" />
-            <h3>{forms[forms.length - 1].title}</h3>
-            <p>{forms[forms.length - 1].description}</p>
-            <div className="form-buttons">
-              <button className="generate-button" onClick={() => handleGenerateQR(forms[forms.length - 1])}>Generate QR</button>
+      {selectedEvent && (
+        <section className="form-table">
+          <div>
+            <h2>Event Form</h2>
+            <div className="current-form-content">
+              <div>
+                <h1>Event name: {selectedEvent.name}</h1>
+                <h2>Detail: {selectedEvent.detail}</h2>
+                {eventLink && <h3>Event Link: <a href={eventLink}>{eventLink}</a></h3>}
+              </div>
+              <div className="qr-section">
+                {qrCode && <QRCode value={qrCode} size={256} />}
+              </div>
+              <div className="form-buttons">
+                <button className="generate-button btn btn-primary" onClick={handleGenerateQR}>
+                  Generate QR
+                </button>
+              </div>
             </div>
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
       <section className="form-table">
         <h2>Form Data Table</h2>
-        <table>
+        <table className="table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Surname</th>
-              <th>Phone</th>
-              <th>Status</th>
+              {Object.keys(displayData[0] || {}).map((header, index) => (
+                <th key={index}>{header}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {tableData.map((row, index) => (
+            {displayData.map((row, index) => (
               <tr key={index}>
-                <td>{row.name}</td>
-                <td>{row.surname}</td>
-                <td>{row.phone}</td>
-                <td>{row.status}</td>
+                {Object.values(row).map((value, idx) => (
+                  <td key={idx}>{value}</td>
+                ))}
               </tr>
             ))}
           </tbody>
         </table>
         <input type="file" accept=".xlsx, .xls" onChange={handleImportXLSX} />
         <div>
-          <button className="submit-button" onClick={handleSubmitXLSX}>Submit</button>
+          <button className="btn btn-primary mt-3" onClick={handleSubmitXLSX}>Submit</button>
+          <button className="btn btn-danger mt-3" onClick={handleDeleteData}>Delete Data</button>
         </div>
-        <br/>
-        <br/>
-        <br/>
-        <div>
-          <button className="export-button" onClick={handleExportXLSX}>Export XLSX</button>
+        <div className="pagination">
+          {Array.from({ length: Math.ceil(tableData.length / rowsPerPage) }, (_, index) => (
+            <button
+              key={index}
+              className={`btn ${currentPage === index + 1 ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
         </div>
-      </section>
-
-      {showQR && selectedForm && (
-        <div className="qr-popup">
-          <div className="qr-popup-content">
-            <QRCode value={JSON.stringify(selectedForm)} size={256} />
-            <br/>
-            <br/>
-            <button onClick={handleCloseQR}>Close</button>
+        {showPopup && (
+          <div className="popup11">
+            <FaCheck className="success-icon" />
+            <p> ลงทะเบียนสำเร็จ!</p>
           </div>
-        </div>
-      )}
+        )}
+      </section>
     </div>
   );
 };

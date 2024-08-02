@@ -6,7 +6,7 @@ function Page404() {
     <div className="page404-container">
       <h1>404</h1>
       <h2>ERROR: Page Not Found</h2> 
-      <p>หาไม่เจอหรือเธอไม่มี</p>
+      <p></p>
     </div>
   );
 }
